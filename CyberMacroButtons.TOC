@@ -1,0 +1,11 @@
+## Interface: 50100
+## Title: CyberMacroButtons
+## DefaultState: Disabled
+## LoadOnDemand: 0
+## SavedVariables: CyberMacroButtonsDB
+## OptionalDeps: Ace3, LibStub, LibActionButton
+
+embeds.xml
+CyberMacroButtons.xml
+
+
