@@ -3,9 +3,8 @@
 ## DefaultState: Disabled
 ## LoadOnDemand: 0
 ## SavedVariables: CyberMacroButtonsDB
-## OptionalDeps: Ace3, LibStub, LibActionButton
+## OptionalDeps: Ace3, LibStub
 
 embeds.xml
+CyberMacroButtonsOSD.xml
 CyberMacroButtons.xml
-
-

@@ -1,54 +1,247 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
 
-	<Script file="CyberMacroButtons.lua" />
-	<Frame name="State_Display" frameStrata="BACKGROUND" parent="UIParent"
-		inherits="SecureHandlerStateTemplate">
-		<Size x="100" y="200" />
+
+	<Script file="CyberMacroButtonsButton.lua" />
+
+	<CheckButton name="CyberMacroButton" virtual="true"
+		inherits="ActionBarButtonTemplate" hidden="false">
+	<Scripts>
+			<OnLoad>
+				CyberMacroButtonsSetButtonMeta(self);
+				self:OnLoad();
+			</OnLoad>
+			<OnAttributeChanged>
+				self:UpdateAction(name, value);
+			</OnAttributeChanged>
+			<OnEvent>
+				self:OnEvent(event, ...);
+			</OnEvent>
+			<PostClick>
+				self:UpdateState(button, down);
+			</PostClick>
+			<OnDragStart>
+				if ( LOCK_ACTIONBAR ~= "1" or IsModifiedClick("PICKUPACTION") ) then
+					SpellFlyout:Hide();
+					PickupAction(self:GetAttribute("action"));
+					self:UpdateState();
+					self:UpdateFlash();
+				end
+			</OnDragStart>
+			<OnReceiveDrag>
+				PlaceAction(self:GetAttribute("action"));
+				self:UpdateState();
+				self:UpdateFlash();
+			</OnReceiveDrag>
+			<OnEnter>
+				self:SetTooltip();
+				self:UpdateFlyout();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+				self:UpdateFlyout();
+			</OnLeave>
+			<OnUpdate>
+				self:OnUpdate(elapsed);
+			</OnUpdate>
+		</Scripts>	
+	</CheckButton>
+
+	<Frame name="CyberMacrosButtonBarTemplate" toplevel="true"
+		frameStrata="HIGH" virtual="true" hidden="false">
+
+		<Size>
+			<AbsDimension x="500" y="38" />
+		</Size>
+		<Frames>
+			<CheckButton name="$parent_Button1" inherits="CyberMacroButton"
+				id="1">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Attributes>
+					<Attribute name="action" type="number" value="1" />
+				</Attributes>
+			</CheckButton>
+			<CheckButton name="$parent_Button2" inherits="CyberMacroButton"
+				id="2">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parent_Button1"
+						relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="6" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Attributes>
+					<Attribute name="action" type="number" value="2" />
+				</Attributes>
+			</CheckButton>
+			<CheckButton name="$parent_Button3" inherits="CyberMacroButton"
+				id="3">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parent_Button2"
+						relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="6" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Attributes>
+					<Attribute name="action" type="number" value="3" />
+				</Attributes>
+			</CheckButton>
+			<CheckButton name="$parent_Button4" inherits="CyberMacroButton"
+				id="4">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parent_Button3"
+						relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="6" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Attributes>
+					<Attribute name="action" type="number" value="4" />
+				</Attributes>
+			</CheckButton>
+			<CheckButton name="$parent_Button5" inherits="CyberMacroButton"
+				id="5">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parent_Button4"
+						relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="6" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Attributes>
+					<Attribute name="action" type="number" value="5" />
+				</Attributes>
+			</CheckButton>
+			<CheckButton name="$parent_Button6" inherits="CyberMacroButton"
+				id="6">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parent_Button5"
+						relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="6" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Attributes>
+					<Attribute name="action" type="number" value="6" />
+				</Attributes>
+			</CheckButton>
+			<CheckButton name="$parent_Button7" inherits="CyberMacroButton"
+				id="7">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parent_Button6"
+						relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="6" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Attributes>
+					<Attribute name="action" type="number" value="7" />
+				</Attributes>
+			</CheckButton>
+			<CheckButton name="$parent_Button8" inherits="CyberMacroButton"
+				id="8">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parent_Button7"
+						relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="6" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Attributes>
+					<Attribute name="action" type="number" value="8" />
+				</Attributes>
+			</CheckButton>
+			<CheckButton name="$parent_Button9" inherits="CyberMacroButton"
+				id="9">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parent_Button8"
+						relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="6" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Attributes>
+					<Attribute name="action" type="number" value="9" />
+				</Attributes>
+			</CheckButton>
+			<CheckButton name="$parent_Button10" inherits="CyberMacroButton"
+				id="10">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parent_Button9"
+						relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="6" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Attributes>
+					<Attribute name="action" type="number" value="10" />
+				</Attributes>
+			</CheckButton>
+			<CheckButton name="$parent_Button11" inherits="CyberMacroButton"
+				id="11">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parent_Button10"
+						relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="6" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Attributes>
+
+					<Attribute name="action" type="number" value="11" />
+
+				</Attributes>
+			</CheckButton>
+			<CheckButton name="$parent_Button12" inherits="CyberMacroButton"
+				id="12">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parent_Button11"
+						relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="6" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Attributes>
+					<Attribute name="action" type="number" value="12" />
+				</Attributes>
+			</CheckButton>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				CyberMacrosAssignStateHandler(self);
+			</OnLoad>
+		</Scripts>
+	</Frame>
+
+
+	<Frame name="CyberMacroButtons_Bar1" frameStrata="BACKGROUND"
+		parent="UIParent" inherits="SecureHandlerStateTemplate, CyberMacrosButtonBarTemplate">
 		<Anchors>
-			<Anchor point="BOTTOMLEFT" relativePoint="CENTER" relativeTo="UIParent">
-				<Offset x="150" y="200" />
+			<Anchor point="BOTTOMLEFT" relativeTo="ActionButton1"
+				relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="0" y="100" />
+				</Offset>
 			</Anchor>
 		</Anchors>
-		<Layers>
-			<Layer level="OVERLAY">
-				<FontString name="$parent_MouseStateText" text="m:none"
-					outline="THICK" inherits="GameFontNormal" parentKey="mStateText">
-					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset x="0" y="0" />
-						</Anchor>
-					</Anchors>
-				</FontString>
-				<FontString name="$parent_FocusStateText" text="f:none"
-					outline="THICK" inherits="GameFontNormal" parentKey="fStateText">
-					<Anchors>
-						<Anchor relativeTo="$parent_MouseStateText" relativePoint="BOTTOMLEFT"
-							point="TOPLEFT">
-							<Offset x="0" y="0" />
-						</Anchor>
-					</Anchors>
-				</FontString>
-				<FontString name="$parent_TargetStateText" text="t:none"
-					outline="THICK" inherits="GameFontNormal" parentKey="tStateText">
-					<Anchors>
-						<Anchor relativeTo="$parent_FocusStateText" relativePoint="BOTTOMLEFT"
-							point="TOPLEFT">
-							<Offset x="0" y="0" />
-						</Anchor>
-					</Anchors>
-				</FontString>
-				<FontString name="$parent_TargetStateText" text="tt:none"
-					outline="THICK" inherits="GameFontNormal" parentKey="ttStateText">
-					<Anchors>
-						<Anchor relativeTo="$parent_TargetStateText" relativePoint="BOTTOMLEFT"
-							point="TOPLEFT">
-							<Offset x="0" y="0" />
-						</Anchor>
-					</Anchors>
-				</FontString>
-			</Layer>
-		</Layers>
 	</Frame>
 </Ui>
 

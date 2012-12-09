@@ -1,0 +1,55 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+	
+	<Frame name="State_Display" frameStrata="BACKGROUND" parent="UIParent"
+		inherits="SecureHandlerStateTemplate">
+
+		<Size x="100" y="200" />
+		<Anchors>
+			<Anchor point="BOTTOMLEFT" relativePoint="CENTER" relativeTo="UIParent">
+				<Offset x="150" y="200" />
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="OVERLAY">
+				<FontString name="$parent_MouseStateText" text="m:none"
+					outline="THICK" inherits="GameFontNormal" parentKey="mStateText">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset x="0" y="0" />
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parent_FocusStateText" text="f:none"
+					outline="THICK" inherits="GameFontNormal" parentKey="fStateText">
+					<Anchors>
+						<Anchor relativeTo="$parent_MouseStateText" relativePoint="BOTTOMLEFT"
+							point="TOPLEFT">
+							<Offset x="0" y="0" />
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parent_TargetStateText" text="t:none"
+					outline="THICK" inherits="GameFontNormal" parentKey="tStateText">
+					<Anchors>
+						<Anchor relativeTo="$parent_FocusStateText" relativePoint="BOTTOMLEFT"
+							point="TOPLEFT">
+							<Offset x="0" y="0" />
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parent_TargetStateText" text="tt:none"
+					outline="THICK" inherits="GameFontNormal" parentKey="ttStateText">
+					<Anchors>
+						<Anchor relativeTo="$parent_TargetStateText" relativePoint="BOTTOMLEFT"
+							point="TOPLEFT">
+							<Offset x="0" y="0" />
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+	</Frame>
+</Ui>
+
+
