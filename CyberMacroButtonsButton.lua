@@ -11,6 +11,8 @@ local NUM_ACTIONBAR_BUTTONS = 12;
 local ATTACK_BUTTON_FLASH_TIME = 0.4;
 local RANGE_INDICATOR = "●";
 
+local LibKeyBound = LibStub("LibKeyBound-1.0")
+
 function CyberMacrosAssignStateHandler(self)
 	for _, fTarget in ipairs({"mouseover", "focus", "target", "targettarget"}) do
 		RegisterStateDriver(self, fTarget, "[@" .. fTarget .. ", exists, dead, help]rez;[@" .. fTarget .. ", help, nodead]help;[@" .. fTarget .. ", harm, nodead]harm;[@" .. fTarget .. ",dead]dead;none");
@@ -39,21 +41,6 @@ function CyberMacroButtonsSetButtonMeta(button)
 		end
 	end
 	setmetatable(button, meta);
-end
-
-function Button:OnButtonDown()
-	if (self:GetButtonState() == "NORMAL" ) then
-		self:SetButtonState("PUSHED");
-	end
-end
-
-function Button:OnButtonUp()
-	if ( self:GetButtonState() == "PUSHED" ) then
-		self:SetButtonState("NORMAL");
-		--TODO Check if this taints. May occur when hotkeys are introduced.
-		SecureActionButton_OnClick(button, "LeftButton");
-		self:UpdateState();
-	end
 end
 
 function Button:OnLoad()
@@ -607,5 +594,48 @@ function Button:UpdateFlyout()
 	end
 end
 
+local theKey = "1";
 
+--  returns the current hotkey assigned to me
+function Button:GetHotkey()
+	CyberLoot:Print("GetHotkey");
+	return GetBindingKey("CLICK " .. self:GetName() .. ":LeftButton");
+end
 
+-- binds the given key to me
+--function Button:SetKey(key)
+--	SetBindingClick(key, self:GetName(), 'LeftButton')
+--	CyberLoot:Print("SetKey(" .. key .. ")");
+--end
+
+-- unbinds the given key from all other buttons
+--function Button:FreeKey(key)
+--	SetBinding(key);
+--
+--	CyberLoot:Print("FreeKey(" .. key .. ")");
+--end
+
+-- removes all keys bound to me
+--function Button:ClearBindings()
+--	CyberLoot:Print("ClearBindings");
+--	theKey = "clear";
+--end
+--
+---- returns a string listing all of my bindings
+--function Button:GetBindings()
+--	CyberLoot:Print("GetBindings");
+--	return theKey;
+--end
+--
+---- what we're binding to, used for printing
+--function Button:GetActionName()
+--	CyberLoot:Print("GetActionName");
+--	return "Surprise!";
+--end
+
+function Button:LKBOnEnter()
+	CyberLoot:Print("LKBOnEnter");
+	if(self.GetHotkey) then
+		LibKeyBound:Set(self)
+	end
+end

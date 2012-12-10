@@ -3,7 +3,7 @@
 
 
 	<Script file="CyberMacroButtonsButton.lua" />
-
+	
 	<CheckButton name="CyberMacroButton" virtual="true"
 		inherits="ActionBarButtonTemplate" hidden="false">
 	<Scripts>
@@ -36,6 +36,7 @@
 			<OnEnter>
 				self:SetTooltip();
 				self:UpdateFlyout();
+				self:LKBOnEnter();
 			</OnEnter>
 			<OnLeave>
 				GameTooltip:Hide();
@@ -47,9 +48,10 @@
 		</Scripts>	
 	</CheckButton>
 
+
+
 	<Frame name="CyberMacrosButtonBarTemplate" toplevel="true"
 		frameStrata="HIGH" virtual="true" hidden="false">
-
 		<Size>
 			<AbsDimension x="500" y="38" />
 		</Size>

@@ -7,7 +7,8 @@
 
 CyberMacroButtons = LibStub("AceAddon-3.0"):NewAddon("CyberMacroButtons", "AceConsole-3.0", "AceEvent-3.0");
 
-local CMB = CyberMacroButtons; 
+local CMB = CyberMacroButtons;
+local LibKeyBound = LibStub("LibKeyBound-1.0")
 
 function CyberMacroButtons:OnInitialize()
 	self:InitConfig();
@@ -24,7 +25,7 @@ function CyberMacroButtons:OnInitialize()
 		State_Display:SetAttribute("_onstate-" .. fTarget, stateHandler);
 	end
 
-	
+
 	State_Display:HookScript("OnAttributeChanged",
 	function(self,name,value)
 		if(name == "state-mouseover") then
@@ -43,6 +44,11 @@ function CyberMacroButtons:OnInitialize()
 end
 
 
+function CyberMacroButtons:OnEnable(first)
+	LibKeyBound.RegisterCallback(self, "LIBKEYBOUND_ENABLED")
+	LibKeyBound.RegisterCallback(self, "LIBKEYBOUND_DISABLED")
+	LibKeyBound.RegisterCallback(self, "LIBKEYBOUND_MODE_COLOR_CHANGED")
+end
 
 
 function CyberMacroButtons:RegisterEvents()
@@ -50,12 +56,25 @@ function CyberMacroButtons:RegisterEvents()
 end
 
 function CyberMacroButtons:InitConfig()
-
 end
 
-function CyberMacroButtons:SlashTest(args)
-	self:DebugPrint("Test command executed!");
+
+function CyberMacroButtons:LIBKEYBOUND_ENABLED()
+	self:Print("LIBKEYBOUND_ENABLED");
+	--CyberMacroButtons:OtherModeOff()
+	CyberMacroButtons.keyBoundMode = true
+	--CyberMacroButtons:ColorMyMod()
 end
 
+function CyberMacroButtons:LIBKEYBOUND_DISABLED()
+	self:Print("LIBKEYBOUND_DISABLED");
+	CyberMacroButtons.keyBoundMode = nil
+	--CyberMacroButtons:ColorMyMod()
+end
+
+function CyberMacroButtons:LIBKEYBOUND_MODE_COLOR_CHANGED()
+	self:Print("LIBKEYBOUND_MODE_COLOR_CHANGED");
+	--CyberMacroButtons:ColorMyMod()
+end
 
 

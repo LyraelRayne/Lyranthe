@@ -3,8 +3,11 @@
 ## DefaultState: Disabled
 ## LoadOnDemand: 0
 ## SavedVariables: CyberMacroButtonsDB
-## OptionalDeps: Ace3, LibStub
+## OptionalDeps: Ace3, LibStub, LibKeyBound-1.0
+## X-Embeds: Ace3, LibKeyBound-1.0
 
 embeds.xml
+
+CyberMacroButtonsAddon.lua
 CyberMacroButtonsOSD.xml
 CyberMacroButtons.xml
