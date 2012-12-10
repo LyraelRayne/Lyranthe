@@ -73,8 +73,19 @@ function Button:OnLoad()
 end
 
 function Button:UpdateHotkeys ()
--- Todo;
+	local hotkey = _G[self:GetName().."HotKey"];
+	local key = self:GetHotkey();
 
+	local text = GetBindingText(key, "KEY_", 1);
+	if ( text == "" ) then
+		hotkey:SetText(RANGE_INDICATOR);
+		hotkey:SetPoint("TOPLEFT", self, "TOPLEFT", 1, -2);
+		hotkey:Hide();
+	else
+		hotkey:SetText(text);
+		hotkey:SetPoint("TOPLEFT", self, "TOPLEFT", -2, -2);
+		hotkey:Show();
+	end
 end
 
 
