@@ -108,7 +108,13 @@ end
 -- Currently does nothing.
 function Button:UpdateAction()
 	local action = self:CalculateAction();
-	self:Update();
+
+	if ( action ~= self.action ) then
+		-- We don't use this variable but for some reason on clicking a flyout
+		-- the secure action button template checks self.action.
+		self.action = action;
+		self:Update();
+	end
 end
 
 -- TODO Make it check the proper (advanced) action;
@@ -591,13 +597,8 @@ function Button:UpdateFlyout()
 		-- Update arrow
 		self.FlyoutArrow:Show();
 		self.FlyoutArrow:ClearAllPoints();
-		if (self:GetParent() == MultiBarRight or self:GetParent() == MultiBarLeft) then
-			self.FlyoutArrow:SetPoint("LEFT", self, "LEFT", -arrowDistance, 0);
-			SetClampedTextureRotation(self.FlyoutArrow, 270);
-		else
-			self.FlyoutArrow:SetPoint("TOP", self, "TOP", 0, arrowDistance);
-			SetClampedTextureRotation(self.FlyoutArrow, 0);
-		end
+		self.FlyoutArrow:SetPoint("TOP", self, "TOP", 0, arrowDistance);
+		SetClampedTextureRotation(self.FlyoutArrow, 0);
 	else
 		self.FlyoutBorder:Hide();
 		self.FlyoutBorderShadow:Hide();
@@ -605,47 +606,17 @@ function Button:UpdateFlyout()
 	end
 end
 
-local theKey = "1";
+---------------------------------------------------------------------------------------------------------------------------------------------------
+-- LibKeyBound Handlers.
+---------------------------------------------------------------------------------------------------------------------------------------------------
 
 --  returns the current hotkey assigned to me
 function Button:GetHotkey()
-	CyberLoot:Print("GetHotkey");
 	return GetBindingKey("CLICK " .. self:GetName() .. ":LeftButton");
 end
 
--- binds the given key to me
---function Button:SetKey(key)
---	SetBindingClick(key, self:GetName(), 'LeftButton')
---	CyberLoot:Print("SetKey(" .. key .. ")");
---end
-
--- unbinds the given key from all other buttons
---function Button:FreeKey(key)
---	SetBinding(key);
---
---	CyberLoot:Print("FreeKey(" .. key .. ")");
---end
-
--- removes all keys bound to me
---function Button:ClearBindings()
---	CyberLoot:Print("ClearBindings");
---	theKey = "clear";
---end
---
----- returns a string listing all of my bindings
---function Button:GetBindings()
---	CyberLoot:Print("GetBindings");
---	return theKey;
---end
---
----- what we're binding to, used for printing
---function Button:GetActionName()
---	CyberLoot:Print("GetActionName");
---	return "Surprise!";
---end
-
+-- Tells LibKeyBound which key is under the mouse.
 function Button:LKBOnEnter()
-	CyberLoot:Print("LKBOnEnter");
 	if(self.GetHotkey) then
 		LibKeyBound:Set(self)
 	end
