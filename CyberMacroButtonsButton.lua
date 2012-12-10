@@ -119,18 +119,18 @@ end
 
 -- TODO Make it check the proper (advanced) action;
 function Button:HasValidAction()
-	return HasAction(self:GetAttribute("action"));
+	return HasAction(self.action);
 end
 
 -- TODO Make it use the texture of the proper (advanced) action;
 function Button:GetActionTexture()
-	return GetActionTexture(self:GetAttribute("action"))
+	return GetActionTexture(self.action)
 end
 
 function Button:Update ()
 	local name = self:GetName();
 
-	local action = self:GetAttribute("action");
+	local action = self.action;
 	local icon = _G[name.."Icon"];
 	local buttonCooldown = _G[name.."Cooldown"];
 
@@ -276,14 +276,14 @@ function Button:HideGrid ()
 		end
 	end
 
-	if ( self:GetAttribute("showgrid") == 0 and not HasAction(self:GetAttribute("action")) ) then
+	if ( self:GetAttribute("showgrid") == 0 and not HasAction(self.action) ) then
 		self:Hide();
 	end
 end
 
 function Button:UpdateState ()
 
-	local action = self:GetAttribute("action");
+	local action = self.action;
 	if ( IsCurrentAction(action) or IsAutoRepeatAction(action) ) then
 		self:SetChecked(1);
 	else
@@ -295,7 +295,7 @@ function Button:UpdateUsable ()
 	local name = self:GetName();
 	local icon = _G[name.."Icon"];
 	local normalTexture = _G[name.."NormalTexture"];
-	local isUsable, notEnoughMana = IsUsableAction(self:GetAttribute("action"));
+	local isUsable, notEnoughMana = IsUsableAction(self.action);
 	if ( isUsable ) then
 		icon:SetVertexColor(1.0, 1.0, 1.0);
 		normalTexture:SetVertexColor(1.0, 1.0, 1.0);
@@ -310,7 +310,7 @@ end
 
 function Button:UpdateCount ()
 	local text = _G[self:GetName().."Count"];
-	local action = self:GetAttribute("action");
+	local action = self.action;
 	if ( IsConsumableAction(action) or IsStackableAction(action) ) then
 		local count = GetActionCount(action);
 		if ( count > (self.maxDisplayCount or 9999 ) ) then
@@ -325,7 +325,7 @@ end
 
 function Button:UpdateCooldown ()
 	local cooldown = _G[self:GetName().."Cooldown"];
-	local start, duration, enable = GetActionCooldown(self:GetAttribute("action"));
+	local start, duration, enable = GetActionCooldown(self.action);
 	CooldownFrame_SetTimer(cooldown, start, duration, enable);
 end
 
@@ -342,7 +342,7 @@ function Button:GetOverlayGlow()
 end
 
 function Button:UpdateOverlayGlow()
-	local spellType, id, subType  = GetActionInfo(self:GetAttribute("action"));
+	local spellType, id, subType  = GetActionInfo(self.action);
 	if ( spellType == "spell" and IsSpellOverlayed(id) ) then
 		self:ShowOverlayGlow();
 	else
@@ -396,7 +396,7 @@ function Button:OnEvent ( event, ...)
 		end
 	end
 	if ( event == "ACTIONBAR_SLOT_CHANGED" ) then
-		if ( arg1 == 0 or arg1 == tonumber(self:GetAttribute("action")) ) then
+		if ( arg1 == 0 or arg1 == tonumber(self.action) ) then
 			self:Update();
 		end
 		return;
@@ -408,7 +408,7 @@ function Button:OnEvent ( event, ...)
 	end
 	if ( event == "ACTIONBAR_PAGE_CHANGED" or event == "UPDATE_BONUS_ACTIONBAR" ) then
 		self:UpdateAction();
-		local actionType, id, subType = GetActionInfo(self:GetAttribute("action"));
+		local actionType, id, subType = GetActionInfo(self.action);
 		if ( actionType == "spell" and id == 0 ) then
 			self:HideOverlayGlow();
 		end
@@ -442,31 +442,31 @@ function Button:OnEvent ( event, ...)
 	elseif ( event == "TRADE_SKILL_SHOW" or event == "TRADE_SKILL_CLOSE"  or event == "ARCHAEOLOGY_CLOSED" ) then
 		self:UpdateState();
 	elseif ( event == "PLAYER_ENTER_COMBAT" ) then
-		if ( IsAttackAction(self:GetAttribute("action")) ) then
+		if ( IsAttackAction(self.action) ) then
 			self:StartFlash();
 		end
 	elseif ( event == "PLAYER_LEAVE_COMBAT" ) then
-		if ( IsAttackAction(self:GetAttribute("action")) ) then
+		if ( IsAttackAction(self.action) ) then
 			self:StopFlash();
 		end
 	elseif ( event == "START_AUTOREPEAT_SPELL" ) then
-		if ( IsAutoRepeatAction(self:GetAttribute("action")) ) then
+		if ( IsAutoRepeatAction(self.action) ) then
 			self:StartFlash();
 		end
 	elseif ( event == "STOP_AUTOREPEAT_SPELL" ) then
-		if ( self:IsFlashing() and not IsAttackAction(self:GetAttribute("action")) ) then
+		if ( self:IsFlashing() and not IsAttackAction(self.action) ) then
 			self:StopFlash();
 		end
 	elseif ( event == "PET_STABLE_UPDATE" or event == "PET_STABLE_SHOW") then
 		-- Has to update everything for now, but this event should happen infrequently
 		self:Update();
 	elseif ( event == "SPELL_ACTIVATION_OVERLAY_GLOW_SHOW" ) then
-		local actionType, id, subType = GetActionInfo(self:GetAttribute("action"));
+		local actionType, id, subType = GetActionInfo(self.action);
 		if ( actionType == "spell" and id == arg1 ) then
 			self:ShowOverlayGlow();
 		end
 	elseif ( event == "SPELL_ACTIVATION_OVERLAY_GLOW_HIDE" ) then
-		local actionType, id, subType = GetActionInfo(self:GetAttribute("action"));
+		local actionType, id, subType = GetActionInfo(self.action);
 		if ( actionType == "spell" and id == arg1 ) then
 			self:HideOverlayGlow();
 		end
@@ -484,7 +484,7 @@ function Button:SetTooltip ()
 			GameTooltip:SetOwner( "ANCHOR_RIGHT");
 		end
 	end
-	if ( GameTooltip:SetAction(self:GetAttribute("action")) ) then
+	if ( GameTooltip:SetAction(self.action) ) then
 		self.UpdateTooltip = self.SetTooltip;
 	else
 		self.UpdateTooltip = nil;
@@ -521,7 +521,7 @@ function Button:OnUpdate (elapsed)
 
 		if ( rangeTimer <= 0 ) then
 			local count = _G[self:GetName().."HotKey"];
-			local valid = IsActionInRange(self:GetAttribute("action"));
+			local valid = IsActionInRange(self.action);
 			if ( count:GetText() == RANGE_INDICATOR ) then
 				if ( valid == 0 ) then
 					count:Show();
@@ -547,11 +547,11 @@ function Button:OnUpdate (elapsed)
 end
 
 function Button:GetPagedID ()
-	return self:GetAttribute("action");
+	return self.action;
 end
 
 function Button:UpdateFlash ()
-	local action = self:GetAttribute("action");
+	local action = self.action;
 	if ( (IsAttackAction(action) and IsCurrentAction(action)) or IsAutoRepeatAction(action) ) then
 		self:StartFlash();
 	else
@@ -580,7 +580,7 @@ function Button:IsFlashing ()
 end
 
 function Button:UpdateFlyout()
-	local actionType = GetActionInfo(self:GetAttribute("action"));
+	local actionType = GetActionInfo(self.action);
 	if (actionType == "flyout") then
 		-- Update border and determine arrow position
 		local arrowDistance;
