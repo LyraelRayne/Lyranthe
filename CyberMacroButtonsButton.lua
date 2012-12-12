@@ -3,15 +3,18 @@
 -- Working functionality:
 --
 -- Pending Functionality:
--- Create metatable to be assigned to all buttons.
-CyberMacroButtons.ButtonPrototype = {};
-local Button = CyberMacroButtons.ButtonPrototype;
+
+local addon = CyberMacroButtons;
+
+addon.ButtonPrototype = {};
+local Button = addon.ButtonPrototype;
 
 local NUM_ACTIONBAR_BUTTONS = 12;
 local ATTACK_BUTTON_FLASH_TIME = 0.4;
 local RANGE_INDICATOR = "●";
 
 local LibKeyBound = LibStub("LibKeyBound-1.0")
+
 
 function CyberMacrosAssignStateHandler(self)
 	for _, fTarget in ipairs({"mouseover", "focus", "target", "targettarget"}) do
@@ -69,7 +72,6 @@ function Button:OnLoad()
 	self:RegisterEvent("UPDATE_BINDINGS");
 	self:RegisterEvent("UPDATE_SHAPESHIFT_FORM");
 	self:UpdateHotkeys();
-	print("OnLoad complete");
 end
 
 function Button:UpdateHotkeys ()
@@ -117,14 +119,33 @@ function Button:UpdateAction()
 	end
 end
 
--- TODO Make it check the proper (advanced) action;
+
 function Button:HasValidAction()
-	return HasAction(self.action);
+	local type = SecureButton_GetModifiedAttribute(self, "type", "LeftButton");
+	if(type == "action") then
+		return HasAction(self.action);
+	elseif(type == "spell") then
+		local spell = SecureButton_GetModifiedAttribute(self, "spell", "LeftButton");
+		return (spell);
+	else
+		return nil;
+	end
 end
+
+
 
 -- TODO Make it use the texture of the proper (advanced) action;
 function Button:GetActionTexture()
-	return GetActionTexture(self.action)
+	local type = SecureButton_GetModifiedAttribute(self, "type", "LeftButton");
+	if(type == "spell") then
+		local spell = SecureButton_GetModifiedAttribute(self, "spell", "LeftButton");
+		local texture = GetSpellTexture(spell);
+		return texture;
+	elseif(type == "action") then
+		return GetActionTexture(self.action)
+	else
+		return nil;
+	end
 end
 
 function Button:Update ()
@@ -162,9 +183,11 @@ function Button:Update ()
 			self.eventsRegistered = true;
 		end
 
-		if ( not self:GetAttribute("statehidden") ) then
-			self:Show();
-		end
+		-- This appears to be running in combat causing taint
+		-- TODO replace this with a secure showhide handler.
+		--if ( not self:GetAttribute("statehidden") ) then
+		--	self:Show();
+		-- end
 		self:UpdateState();
 		self:UpdateUsable();
 		self:UpdateCooldown();
@@ -282,12 +305,21 @@ function Button:HideGrid ()
 end
 
 function Button:UpdateState ()
-
-	local action = self.action;
-	if ( IsCurrentAction(action) or IsAutoRepeatAction(action) ) then
-		self:SetChecked(1);
-	else
-		self:SetChecked(0);
+	local type = SecureButton_GetModifiedAttribute(self, "type", "LeftButton");
+	if(type == "action") then
+		local action = self.action;
+		if ( IsCurrentAction(action) or IsAutoRepeatAction(action) ) then
+			self:SetChecked(1);
+		else
+			self:SetChecked(0);
+		end
+	elseif(type == "spell") then
+		local spell =  SecureButton_GetModifiedAttribute(self, "spell", "LeftButton");
+		if ( IsCurrentSpell(spell) or IsAutoRepeatSpell(spell) ) then
+			self:SetChecked(1);
+		else
+			self:SetChecked(0);
+		end
 	end
 end
 
@@ -295,7 +327,14 @@ function Button:UpdateUsable ()
 	local name = self:GetName();
 	local icon = _G[name.."Icon"];
 	local normalTexture = _G[name.."NormalTexture"];
-	local isUsable, notEnoughMana = IsUsableAction(self.action);
+	local type = SecureButton_GetModifiedAttribute(self, "type", "LeftButton");
+	local isUsable, notEnoughMana;
+	if(type == "action") then
+		isUsable, notEnoughMana = IsUsableAction(self.action);
+	elseif(type == "spell") then
+		local spell = SecureButton_GetModifiedAttribute(self, "spell", "LeftButton");
+		isUsable, notEnoughMana = IsUsableSpell(spell);
+	end
 	if ( isUsable ) then
 		icon:SetVertexColor(1.0, 1.0, 1.0);
 		normalTexture:SetVertexColor(1.0, 1.0, 1.0);
@@ -306,6 +345,7 @@ function Button:UpdateUsable ()
 		icon:SetVertexColor(0.4, 0.4, 0.4);
 		normalTexture:SetVertexColor(1.0, 1.0, 1.0);
 	end
+
 end
 
 function Button:UpdateCount ()
@@ -325,7 +365,15 @@ end
 
 function Button:UpdateCooldown ()
 	local cooldown = _G[self:GetName().."Cooldown"];
-	local start, duration, enable = GetActionCooldown(self.action);
+	local type = SecureButton_GetModifiedAttribute(self, "type", "LeftButton");
+	local start, duration, enable;
+	if(type == "action") then
+		start, duration, enable = GetActionCooldown(self.action);
+	elseif(type == "spell") then
+		local spell = SecureButton_GetModifiedAttribute(self, "spell", "LeftButton");
+		start, duration, enable = GetSpellCooldown(spell);
+	end
+
 	CooldownFrame_SetTimer(cooldown, start, duration, enable);
 end
 
@@ -342,11 +390,21 @@ function Button:GetOverlayGlow()
 end
 
 function Button:UpdateOverlayGlow()
-	local spellType, id, subType  = GetActionInfo(self.action);
-	if ( spellType == "spell" and IsSpellOverlayed(id) ) then
-		self:ShowOverlayGlow();
-	else
-		self:HideOverlayGlow();
+	local type = SecureButton_GetModifiedAttribute(self, "type", "LeftButton");
+	if(type == "action") then
+		local spellType, id, subType  = GetActionInfo(self.action);
+		if ( spellType == "spell" and IsSpellOverlayed(id) ) then
+			self:ShowOverlayGlow();
+		else
+			self:HideOverlayGlow();
+		end
+	elseif (type == "spell") then
+		local spell = SecureButton_GetModifiedAttribute(self, "spell", "LeftButton");
+		if(IsSpellOverlayed(spell)) then
+			self:ShowOverlayGlow();
+		else
+			self:HideOverlayGlow();
+		end
 	end
 end
 
@@ -390,6 +448,7 @@ end
 
 function Button:OnEvent ( event, ...)
 	local arg1 = ...;
+	-- Update tooltips and item counts when inventory/spellbook changes.
 	if ((event == "UNIT_INVENTORY_CHANGED" and arg1 == "player") or event == "LEARNED_SPELL_IN_TAB") then
 		if ( GameTooltip:GetOwner() == self ) then
 			self:SetTooltip();
@@ -401,11 +460,13 @@ function Button:OnEvent ( event, ...)
 		end
 		return;
 	end
+
+	-- need to listen for UPDATE_SHAPESHIFT_FORM because attack icons change when the shapeshift form changes
 	if ( event == "PLAYER_ENTERING_WORLD" or event == "UPDATE_SHAPESHIFT_FORM" ) then
-		-- need to listen for UPDATE_SHAPESHIFT_FORM because attack icons change when the shapeshift form changes
 		self:Update();
 		return;
 	end
+	-- Do we actually want paging support? Suspect not but here it is.
 	if ( event == "ACTIONBAR_PAGE_CHANGED" or event == "UPDATE_BONUS_ACTIONBAR" ) then
 		self:UpdateAction();
 		local actionType, id, subType = GetActionInfo(self.action);
@@ -461,15 +522,9 @@ function Button:OnEvent ( event, ...)
 		-- Has to update everything for now, but this event should happen infrequently
 		self:Update();
 	elseif ( event == "SPELL_ACTIVATION_OVERLAY_GLOW_SHOW" ) then
-		local actionType, id, subType = GetActionInfo(self.action);
-		if ( actionType == "spell" and id == arg1 ) then
-			self:ShowOverlayGlow();
-		end
+		self:UpdateOverlayGlow();
 	elseif ( event == "SPELL_ACTIVATION_OVERLAY_GLOW_HIDE" ) then
-		local actionType, id, subType = GetActionInfo(self.action);
-		if ( actionType == "spell" and id == arg1 ) then
-			self:HideOverlayGlow();
-		end
+		self:UpdateOverlayGlow();
 	end
 end
 
@@ -484,10 +539,29 @@ function Button:SetTooltip ()
 			GameTooltip:SetOwner( "ANCHOR_RIGHT");
 		end
 	end
-	if ( GameTooltip:SetAction(self.action) ) then
-		self.UpdateTooltip = self.SetTooltip;
-	else
-		self.UpdateTooltip = nil;
+	local type = SecureButton_GetModifiedAttribute(self, "type", "LeftButton");
+
+	if (type == "action" ) then
+		GameTooltip:SetAction(self.action)
+	elseif type == "spell" then
+		local spell = SecureButton_GetModifiedAttribute(self, "spell", "LeftButton");
+		GameTooltip:SetSpellBookItem(addon:GetSpellBookId(spell), BOOKTYPE_SPELL)
+	end
+end
+
+function addon:GetSpellBookId(spell)
+	local targetSpellName = GetSpellInfo(spell);
+	local i = 1
+	while true do
+		local currentSpellName = GetSpellBookItemName(i, BOOKTYPE_SPELL);
+		if (not currentSpellName) then
+			break
+		end
+		if(currentSpellName == targetSpellName) then
+			return i;
+		end
+
+		i = i + 1
 	end
 end
 
@@ -520,29 +594,40 @@ function Button:OnUpdate (elapsed)
 		rangeTimer = rangeTimer - elapsed;
 
 		if ( rangeTimer <= 0 ) then
-			local count = _G[self:GetName().."HotKey"];
-			local valid = IsActionInRange(self.action);
-			if ( count:GetText() == RANGE_INDICATOR ) then
+			local hotKey = _G[self:GetName().."HotKey"];
+			local valid = self:IsTargetInRange();
+			if ( hotKey:GetText() == RANGE_INDICATOR ) then
 				if ( valid == 0 ) then
-					count:Show();
-					count:SetVertexColor(1.0, 0.1, 0.1);
+					hotKey:Show();
+					hotKey:SetVertexColor(1.0, 0.1, 0.1);
 				elseif ( valid == 1 ) then
-					count:Show();
-					count:SetVertexColor(0.6, 0.6, 0.6);
+					hotKey:Show();
+					hotKey:SetVertexColor(0.6, 0.6, 0.6);
 				else
-					count:Hide();
+					hotKey:Hide();
 				end
 			else
 				if ( valid == 0 ) then
-					count:SetVertexColor(1.0, 0.1, 0.1);
+					hotKey:SetVertexColor(1.0, 0.1, 0.1);
 				else
-					count:SetVertexColor(0.6, 0.6, 0.6);
+					hotKey:SetVertexColor(0.6, 0.6, 0.6);
 				end
 			end
 			rangeTimer = TOOLTIP_UPDATE_TIME;
 		end
 
 		self.rangeTimer = rangeTimer;
+	end
+end
+
+function Button:IsTargetInRange()
+	local type = SecureButton_GetModifiedAttribute(self, "type", "LeftButton");
+	if(type == "action") then
+		return IsActionInRange(self.action);
+	elseif(type == "spell") then
+		local spell = SecureButton_GetModifiedAttribute(self, "spell", "LeftButton");
+		local unit = SecureButton_GetModifiedAttribute(self, "unit", "LeftButton");
+		return IsSpellInRange(GetSpellInfo(spell), unit);
 	end
 end
 
