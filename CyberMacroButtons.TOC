@@ -8,6 +8,8 @@
 
 embeds.xml
 
-CyberMacroButtonsAddon.lua
+Addon.lua
+ActionButton.lua
+OriginalButton.lua
 CyberMacroButtonsOSD.xml
 CyberMacroButtons.xml

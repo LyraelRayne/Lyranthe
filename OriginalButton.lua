@@ -1,50 +1,29 @@
 -- Author      : CyberWitch
 -- Create Date : 2012/12/08 4:56:43 PM
 -- Working functionality:
+-- Can use like blizz action bars.
+-- Buttons which have been hacked to have a spell type instead of action will be decorated correctly AFAIK.
 --
 -- Pending Functionality:
+-- Masque support.
+-- Allow drag and drop of spells to change to a spell button rather than using action slots.
+-- Multiple state and target support
+-- Same features as for spell but for macro?
+-- Flyouts?
+
 
 local addon = CyberMacroButtons;
 
-addon.ButtonPrototype = {};
-local Button = addon.ButtonPrototype;
+local MSQ = LibStub("Masque");
+
+addon.OriginalButtonPrototype = {};
+local Button = addon.OriginalButtonPrototype;
 
 local NUM_ACTIONBAR_BUTTONS = 12;
 local ATTACK_BUTTON_FLASH_TIME = 0.4;
 local RANGE_INDICATOR = "●";
 
 local LibKeyBound = LibStub("LibKeyBound-1.0")
-
-
-function CyberMacrosAssignStateHandler(self)
-	for _, fTarget in ipairs({"mouseover", "focus", "target", "targettarget"}) do
-		RegisterStateDriver(self, fTarget, "[@" .. fTarget .. ", exists, dead, help]rez;[@" .. fTarget .. ", help, nodead]help;[@" .. fTarget .. ", harm, nodead]harm;[@" .. fTarget .. ",dead]dead;none");
-		self:SetAttribute("state-" .. fTarget, "none");
-		local stateHandler = [[
-			self:ChildUpdate(stateid, newstate);
-		]]
-		self:SetAttribute("_onstate-" .. fTarget, stateHandler);
-	end
-end
-
--- Adds button prototype functions to the metatable index, essentially "mixing in" the prototype methods.
-function CyberMacroButtonsSetButtonMeta(button)
-	local meta = getmetatable(button);
-	if(meta == nil) then
-		meta = {};
-		meta.__index = {};
-	elseif(meta.__index == nil) then
-		meta.__index = {};
-	end
-	-- Button = the prototype. As opposed to button, the actual button.
-	local theIndex = meta.__index;
-	for key,value in pairs(Button) do
-		if(key ~= nil) then
-			theIndex[key] = value;
-		end
-	end
-	setmetatable(button, meta);
-end
 
 function Button:OnLoad()
 
@@ -54,6 +33,9 @@ function Button:OnLoad()
 	--	]]
 	--
 	--	self:SetAttribute("_childupdate-target", targetHandler);
+
+	local msqGroup = MSQ:Group("CyberMacroButtons", "CyberMacroButtons-Bar1");
+	msqGroup:AddButton(self);
 
 	self.flashing = 0;
 	self.flashtime = 0;
@@ -90,7 +72,20 @@ function Button:UpdateHotkeys ()
 	end
 end
 
+function Button:OnDragStart(button)
+	if ( LOCK_ACTIONBAR ~= "1" or IsModifiedClick("PICKUPACTION") ) then
+		SpellFlyout:Hide();
+		PickupAction(self:GetAttribute("action"));
+		self:UpdateState();
+		self:UpdateFlash();
+	end
+end
 
+function Button:OnReceiveDrag()
+	PlaceAction(self:GetAttribute("action"));
+	self:UpdateState();
+	self:UpdateFlash();
+end
 
 
 -- TODO This needs to be sorted out to work with spell/macro/whatever instead of action buttons.
@@ -289,6 +284,7 @@ function Button:ShowGrid ()
 	end
 end
 
+-- Todo make this simpler and not reliant on action button checks. 
 function Button:HideGrid ()
 
 	local showgrid = self:GetAttribute("showgrid");
@@ -549,21 +545,7 @@ function Button:SetTooltip ()
 	end
 end
 
-function addon:GetSpellBookId(spell)
-	local targetSpellName = GetSpellInfo(spell);
-	local i = 1
-	while true do
-		local currentSpellName = GetSpellBookItemName(i, BOOKTYPE_SPELL);
-		if (not currentSpellName) then
-			break
-		end
-		if(currentSpellName == targetSpellName) then
-			return i;
-		end
 
-		i = i + 1
-	end
-end
 
 function Button:OnUpdate (elapsed)
 	if ( self:IsFlashing() ) then
@@ -629,10 +611,6 @@ function Button:IsTargetInRange()
 		local unit = SecureButton_GetModifiedAttribute(self, "unit", "LeftButton");
 		return IsSpellInRange(GetSpellInfo(spell), unit);
 	end
-end
-
-function Button:GetPagedID ()
-	return self.action;
 end
 
 function Button:UpdateFlash ()

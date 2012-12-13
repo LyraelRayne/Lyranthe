@@ -1,8 +1,5 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
-
-
-	<Script file="CyberMacroButtonsButton.lua" />
 	
 	<CheckButton name="CyberMacroButton" virtual="true"
 		inherits="ActionBarButtonTemplate" hidden="false">
@@ -21,17 +18,10 @@
 				self:UpdateState(button, down);
 			</PostClick>
 			<OnDragStart>
-				if ( LOCK_ACTIONBAR ~= "1" or IsModifiedClick("PICKUPACTION") ) then
-					SpellFlyout:Hide();
-					PickupAction(self:GetAttribute("action"));
-					self:UpdateState();
-					self:UpdateFlash();
-				end
+				self:OnDragStart(button);
 			</OnDragStart>
 			<OnReceiveDrag>
-				PlaceAction(self:GetAttribute("action"));
-				self:UpdateState();
-				self:UpdateFlash();
+				self:OnReceiveDrag();
 			</OnReceiveDrag>
 			<OnEnter>
 				self:SetTooltip();
@@ -228,7 +218,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				CyberMacrosAssignStateHandler(self);
+				CyberMacroButtons:AssignStateHandler(self);
 			</OnLoad>
 		</Scripts>
 	</Frame>
