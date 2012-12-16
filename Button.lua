@@ -24,11 +24,12 @@ local RANGE_INDICATOR = "●";
 
 local LibKeyBound = LibStub("LibKeyBound-1.0")
 
-local function OnAttributeChanged(widget, attributeName, attributeValue)
-	addon:Print(widget:GetName())
-	addon:Print(attributeName)
-	addon:Print(attributeValue)
-	widget:UpdateAction(); 
+local function LyrOnAttributeChanged(widget, attributeName, attributeValue)
+	if(widget.UpdateAction) then
+		widget:UpdateAction();
+	else
+		addon:Print(tostring(widget:GetName()));
+	end
 end
 
 function Button:OnLoad()
@@ -41,9 +42,15 @@ function Button:OnLoad()
 	self:RegisterEvent("UPDATE_SHAPESHIFT_FORM");
 	self:UpdateHotkeys();
 	self:UpdateAction();
-	
-	---self:SetScript("OnAttributeChanged", OnAttributeChanged);
-	
+
+	if ( not self:GetAttribute("statehidden") ) then
+		self:Show();
+	end
+	if ( self:GetAttribute("showgrid") == 0 ) then
+		self:Hide();
+	end
+
+	self:SetScript("OnAttributeChanged", LyrOnAttributeChanged);
 end
 
 function Button:UpdateHotkeys ()
@@ -472,7 +479,6 @@ function Button:UpdateFlyout()
 		self.FlyoutArrow:Hide();
 	end
 end
-
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 -- Things which will just hand off to the specific prototype table.
