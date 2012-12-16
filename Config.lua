@@ -12,6 +12,25 @@ function addon:getActionButtonDefaults(actionSlot) return {
 			action = actionSlot,
 			unit = "target",
 			["useparent-unit"] = true,
+			showgrid = 1,
+			checkselfcast = true,
+			checkfocuscast = true,
+		},
+		width = nil,
+		height = nil,
+	};
+end
+
+
+function addon:getSpellButtonDefaults(spellID) return {
+		attributes = {
+			type = "spell",
+			spell = spellID,
+			unit = "target",
+			["useparent-unit"] = true,
+			showgrid = 1,
+			checkselfcast = true,
+			checkfocuscast = true,
 		},
 		width = nil,
 		height = nil,
@@ -37,7 +56,7 @@ local DefaultSettings = {
 					[3] = addon:getActionButtonDefaults(3),
 					[4] = addon:getActionButtonDefaults(4),
 					[5] = addon:getActionButtonDefaults(5),
-					[6] = addon:getActionButtonDefaults(6),
+					[6] = addon:getSpellButtonDefaults(8042),
 					[7] = addon:getActionButtonDefaults(7),
 					[8] = addon:getActionButtonDefaults(8),
 					[9] = addon:getActionButtonDefaults(9),

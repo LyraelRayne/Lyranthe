@@ -124,7 +124,6 @@ function addon:GenerateButtons(bar)
 		local button = CreateFrame("CheckButton", buttonName, bar, self.BUTTON_TEMPLATE);
 		SetButtonMeta(button);
 		button.currentActionPrototype = addon.ButtonPrototype[buttonConfig.attributes.type];
-		button:SetScript("OnAttributeChanged", button.OnAttributeChanged);
 		button.config = buttonConfig;
 		if(lastButton) then
 			button:SetPoint("TOPLEFT", lastButton, "TOPRIGHT", 3, 0);

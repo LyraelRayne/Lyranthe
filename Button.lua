@@ -24,18 +24,16 @@ local RANGE_INDICATOR = "●";
 
 local LibKeyBound = LibStub("LibKeyBound-1.0")
 
-function Button:OnAttributeChanged()
-	self:UpdateAction();
+local function OnAttributeChanged(widget, attributeName, attributeValue)
+	addon:Print(widget:GetName())
+	addon:Print(attributeName)
+	addon:Print(attributeValue)
+	widget:UpdateAction(); 
 end
 
 function Button:OnLoad()
 	self.flashing = 0;
 	self.flashtime = 0;
-	self:SetAttribute("showgrid", 1);
-	self:SetAttribute("type", "action");
-	self:SetAttribute("checkselfcast", true);
-	self:SetAttribute("checkfocuscast", true);
-	self:SetAttribute("useparent-unit", true);
 	self:RegisterForDrag("LeftButton", "RightButton");
 	self:RegisterForClicks("AnyUp");
 	self:RegisterEvent("PLAYER_ENTERING_WORLD");
@@ -43,11 +41,14 @@ function Button:OnLoad()
 	self:RegisterEvent("UPDATE_SHAPESHIFT_FORM");
 	self:UpdateHotkeys();
 	self:UpdateAction();
+	
+	---self:SetScript("OnAttributeChanged", OnAttributeChanged);
+	
 end
 
 function Button:UpdateHotkeys ()
 	local hotkey = _G[self:GetName() .. "HotKey"];
-	local key = self:GetHotkey(); 
+	local key = self:GetHotkey();
 	local text = GetBindingText(key, "KEY_", 1);
 	if ( text == "" ) then
 		hotkey:SetText(RANGE_INDICATOR);

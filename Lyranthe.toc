@@ -12,6 +12,7 @@ Addon.lua
 Config.lua
 Button.lua
 ActionButton.lua
+SpellButton.lua
 OSD.lua
 OSD.xml
 Buttons.xml
