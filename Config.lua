@@ -6,38 +6,36 @@ local AceConfigRegistry = LibStub("AceConfigRegistry-3.0");
 local AceDB = LibStub("AceDB-3.0");
 
 
-function addon:getActionButtonDefaults(actionSlot) return {
-		attributes = {
-			type = "action",
-			action = actionSlot,
-			unit = "target",
-			["useparent-unit"] = true,
-			showgrid = 1,
-			checkselfcast = true,
-			checkfocuscast = true,
+local labDefaultConfig = {
+	outOfRangeColoring = "button",
+	tooltip = "enabled",
+	showGrid = true,
+	colors = {
+		range = { 0.8, 0.1, 0.1 },
+		mana = { 0.5, 0.5, 1.0 }
+	},
+	hideElements = {
+		macro = false,
+		hotkey = false,
+		equipped = false,
+	},
+	keyBoundTarget = nil,
+	clickOnDown = false,
+	flyoutDirection = "UP",
+}
+
+local buttonDefaults = {
+	labConfig = labDefaultConfig,
+	width = nil,
+	height = nil,
+	states = {
+		default = {kind = "empty",
+			action = 0,
 		},
-		width = nil,
-		height = nil,
-	};
-end
-
-
-function addon:getSpellButtonDefaults(spellID) return {
-		attributes = {
-			type = "spell",
-			spell = spellID,
-			unit = "target",
-			["useparent-unit"] = true,
-			showgrid = 1,
-			checkselfcast = true,
-			checkfocuscast = true,
-		},
-		width = nil,
-		height = nil,
-	};
-end
-
-
+	},
+	unit = nil;
+	startup_state = "default",
+};
 
 -- Default settings
 local DefaultSettings = {
@@ -51,18 +49,18 @@ local DefaultSettings = {
 				xOffset = 0,
 				yOffset = 100,
 				buttons = {
-					[1] = addon:getActionButtonDefaults(1),
-					[2] = addon:getActionButtonDefaults(2),
-					[3] = addon:getActionButtonDefaults(3),
-					[4] = addon:getActionButtonDefaults(4),
-					[5] = addon:getActionButtonDefaults(5),
-					[6] = addon:getSpellButtonDefaults(8042),
-					[7] = addon:getActionButtonDefaults(7),
-					[8] = addon:getActionButtonDefaults(8),
-					[9] = addon:getActionButtonDefaults(9),
-					[10]= addon:getActionButtonDefaults(10),
-					[11]= addon:getActionButtonDefaults(11),
-					[12]= addon:getActionButtonDefaults(12),
+					[1] = buttonDefaults,
+					[2] = buttonDefaults,
+					[3] = buttonDefaults,
+					[4] = buttonDefaults,
+					[5] = buttonDefaults,
+					[6] = buttonDefaults,
+					[7] = buttonDefaults,
+					[8] = buttonDefaults,
+					[9] = buttonDefaults,
+					[10]= buttonDefaults,
+					[11]= buttonDefaults,
+					[12]= buttonDefaults,
 				},
 			},
 		},

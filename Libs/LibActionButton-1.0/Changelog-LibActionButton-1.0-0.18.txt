@@ -1,0 +1,12 @@
+tag 0.18
+510ddaf4a17a2f5c839e8badd6bfcccc00d4d232
+Hendrik Leppkes <h.leppkes@gmail.com>
+2012-11-28 22:24:21 +0100
+
+Tag as 0.18
+
+
+--------------------
+
+Hendrik Leppkes:
+	- Fix issue with flyouts and overlay highlighting

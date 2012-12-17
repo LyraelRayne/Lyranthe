@@ -5,12 +5,15 @@
 --
 -- Pending Functionality:
 
-Lyranthe = LibStub("AceAddon-3.0"):NewAddon("Lyranthe", "AceConsole-3.0", "AceEvent-3.0");
+local addonName = "Lyranthe";
+
+Lyranthe = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "AceEvent-3.0");
 Lyranthe.BAR_TEMPLATE = "LyrantheButtonBar";
 Lyranthe.BUTTON_TEMPLATE = "LyrantheButton";
 
 local addon = Lyranthe;
 local LibKeyBound = LibStub("LibKeyBound-1.0");
+local LibActionButton = LibStub("LibActionButton-1.0");
 local Masque = LibStub("Masque", true);
 
 addon.bars = {};
@@ -42,43 +45,13 @@ function addon:RegisterEvents()
 -- self:RegisterEvent("AN_EVENT", "A_HANDLER");
 end
 
-
-
-
---function Lyranthe:LIBKEYBOUND_ENABLED()
---end
---
---function Lyranthe:LIBKEYBOUND_DISABLED()
---
---end
---
---function Lyranthe:LIBKEYBOUND_MODE_COLOR_CHANGED()
---
---end
-
--- Adds button prototype functions to the metatable index, essentially "mixing in" the prototype methods.
-local function SetButtonMeta(button)
-	local meta = getmetatable(button);
-	if(meta == nil) then
-		meta = {};
-		meta.__index = {};
-	elseif(meta.__index == nil) then
-		meta.__index = {};
-	end
-
-	local theIndex = meta.__index;
-	-- We only need to update the metatable if it doesn't have our stuff in it already.
-	-- It would seem that secure action button types all share the same metatable so only need to update once per load!
-	if(not theIndex.lyrantheMetaLoaded) then
-		for key,value in pairs(addon.ButtonPrototype) do
-			if(key ~= nil) then
-				theIndex[key] = value;
-			end
-		end
-		meta.__index = theIndex;
-		theIndex.lyrantheMetaLoaded = true;
-		setmetatable(button, meta);
-	end
+local function AssignBarStateHandler(bar)
+	local stateHandler = [[
+			self:ChildUpdate(stateid, newstate);
+		]]
+	bar:SetAttribute("_onstate-state", stateHandler);
+	RegisterStateDriver(bar, "state", "[help]heal;default");
+	bar:SetAttribute("state-state", "default");
 end
 
 function addon:GenerateBars()
@@ -92,12 +65,14 @@ function addon:GenerateBars()
 		bar.config = barConfig;
 		self.bars[barName] = bar;
 		self:GenerateButtons(bar);
-		self:ConfigureBar(bar);
+		self:SetupMasque(bar);
+		AssignBarStateHandler(bar);
 		bar:Show();
 	end
+
 end
 
-function addon:ConfigureBar(bar)
+function addon:SetupMasque(bar)
 	local config = bar.config;
 	local msqGroup = nil;
 	if(Masque) then
@@ -107,29 +82,28 @@ function addon:ConfigureBar(bar)
 	local buttons = {bar:GetChildren()};
 	for _,button in ipairs(buttons) do
 		if(msqGroup) then
-			msqGroup:AddButton(button);
+			button:AddToMasque(msqGroup);
 		end
-		self:ConfigureButton(button);
 	end
 end
 
 function addon:GenerateButtons(bar)
 	local config = bar.config;
 
-
 	local buttonConfigs = config.buttons;
 	local lastbutton = nil;
 	for index, buttonConfig in ipairs(buttonConfigs) do
 		local buttonName = bar:GetName() .. "_Button" .. index;
-		local button = CreateFrame("CheckButton", buttonName, bar, self.BUTTON_TEMPLATE);
-		SetButtonMeta(button);
-		button.currentActionPrototype = addon.ButtonPrototype[buttonConfig.attributes.type];
-		button.config = buttonConfig;
+		local button = LibActionButton:CreateButton(buttonName, buttonName, bar, buttonConfig.labConfig);
+		button[addonName .. "config"]= buttonConfig;
+		button:SetState("default", "action", index);
+
 		if(lastButton) then
-			button:SetPoint("TOPLEFT", lastButton, "TOPRIGHT", 3, 0);
+			button:SetPoint("TOPLEFT", lastButton, "TOPRIGHT", 2, 0);
 		else
 			button:SetPoint("TOPLEFT");
 		end
+		self:ConfigureButton(button);
 		lastButton = button;
 	end
 end
@@ -139,28 +113,30 @@ function addon:ConfigureButton(button)
 	if(config.width and config.height) then
 		button:SetSize(config.width, config.height);
 	end
-	for key, value in pairs(config.attributes) do
-		button:SetAttribute(key, value);
+	if(config.attributes) then
+		for key, value in pairs(config.attributes) do
+			button:SetAttribute(key, value);
+		end
 	end
-	button:OnLoad();
 end
-
-
-
 
 function addon:GetSpellBookId(spell)
-	local targetSpellName = GetSpellInfo(spell);
-	local i = 1
-	while true do
-		local currentSpellName = GetSpellBookItemName(i, BOOKTYPE_SPELL);
-		if (not currentSpellName) then
-			break
-		end
-		if(currentSpellName == targetSpellName) then
-			return i;
-		end
-
-		i = i + 1
-	end
+	return FindSpellBookSlotBySpellID(spell);
+	
+	
 end
+
+-- Thanks to Nevcairiel, nicked this function from Bartender4.
+function addon:Merge(target, source)
+	if type(target) ~= "table" then target = {} end
+	for k,v in pairs(source) do
+		if type(v) == "table" then
+			target[k] = self:Merge(target[k], v)
+		elseif target[k] == nil then
+			target[k] = v
+		end
+	end
+	return target
+end
+
 

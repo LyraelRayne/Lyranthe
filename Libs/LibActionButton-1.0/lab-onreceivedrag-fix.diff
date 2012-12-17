@@ -1,0 +1,21 @@
+*** LibActionButton-1.0.lua-orig	2012-12-17 21:19:02.628185800 +1100
+--- LibActionButton-1.0.lua	2012-12-17 21:19:08.372514300 +1100
+***************
+*** 305,312 ****
+  			-- We can only use a handful of the possible things on the cursor
+  			-- return false for all those we can't put on buttons
+  
+! 			self:SetAttribute(format("labtype-%d", state), kind)
+! 			self:SetAttribute(format("labaction-%d", state), value)
+  			-- update internal state
+  			self:RunAttribute("UpdateState", state)
+  			-- send a notification to the insecure code
+--- 305,312 ----
+  			-- We can only use a handful of the possible things on the cursor
+  			-- return false for all those we can't put on buttons
+  
+! 			self:SetAttribute(format("labtype-%s", state), kind)
+! 			self:SetAttribute(format("labaction-%s", state), value)
+  			-- update internal state
+  			self:RunAttribute("UpdateState", state)
+  			-- send a notification to the insecure code
