@@ -29,7 +29,7 @@ local buttonDefaults = {
 	width = nil,
 	height = nil,
 	states = {
-		default = {kind = "empty",
+		default = {type = "empty",
 			action = 0,
 		},
 	},
@@ -62,6 +62,15 @@ local DefaultSettings = {
 					[11]= buttonDefaults,
 					[12]= buttonDefaults,
 				},
+				states = {
+					"[@mouseover, harm, mod:ctrl]cc",
+					"[@focus, harm, mod:ctrl]cc",
+					"[@mouseover,help,nodead]heal",
+					"[@target,help,nodead]heal",
+					"[@mouseover,help,dead]rez",
+					"[@target,help,dead]rez",
+					"default"
+				}
 			},
 		},
 	},

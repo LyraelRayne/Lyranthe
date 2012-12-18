@@ -14,12 +14,12 @@ local addon = Lyranthe;
 
 local function AssignOSDStateHandler(osd)
 	for _, fTarget in ipairs({"mouseover", "focus", "target", "targettarget"}) do
-		RegisterStateDriver(osd, fTarget, "[@" .. fTarget .. ", exists, dead, help]rez;[@" .. fTarget .. ", help, nodead]help;[@" .. fTarget .. ", harm, nodead]harm;[@" .. fTarget .. ",dead]dead;none");
-		osd:SetAttribute("state-" .. fTarget, "none");
+		RegisterStateDriver(osd, fTarget, "[@" .. fTarget .. ", exists, dead, help]rez;[@" .. fTarget .. ", help, nodead]help;[@" .. fTarget .. ", harm, nodead]default;[@" .. fTarget .. ",dead]dead;default");
 		local stateHandler = [[
 			self:ChildUpdate(stateid, newstate);
 		]]
 		osd:SetAttribute("_onstate-" .. fTarget, stateHandler);
+		osd:SetAttribute("state-" .. fTarget, "default");
 	end
 end
 

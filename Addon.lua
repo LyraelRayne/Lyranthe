@@ -21,12 +21,8 @@ addon.bars = {};
 function addon:OnInitialize()
 	self:InitConfig();
 
-	self:GenerateBars();
-
 	-- Register for events
 	self:RegisterEvents();
-
-	self:SetupOSD(State_Display);
 
 	-- Always good to know that it worked ;)
 	self:Print("Lyranthe Initialized");
@@ -35,6 +31,10 @@ end
 
 
 function addon:OnEnable(first)
+
+	self:GenerateBars();
+	self:SetupOSD(State_Display);
+
 --	LibKeyBound.RegisterCallback(self, "LIBKEYBOUND_ENABLED")
 --	LibKeyBound.RegisterCallback(self, "LIBKEYBOUND_DISABLED")
 --	LibKeyBound.RegisterCallback(self, "LIBKEYBOUND_MODE_COLOR_CHANGED")
@@ -42,15 +42,31 @@ end
 
 
 function addon:RegisterEvents()
--- self:RegisterEvent("AN_EVENT", "A_HANDLER");
+-- self:RegisterEvent("PLAYER_LOGIN", "OnPlayerLogin");
+end
+
+local function BuildStateFromStates(states)
+	local stateString = "";
+	for index, value in ipairs(states) do
+		stateString = stateString .. value
+		if(index < getn(states)) then
+			stateString = stateString .. ";"
+		end
+	end
+	print(stateString);
+	return stateString;
 end
 
 local function AssignBarStateHandler(bar)
+
+	local state = BuildStateFromStates(bar.config.states);
+	RegisterStateDriver(bar, "state", state);
+
 	local stateHandler = [[
-			self:ChildUpdate(stateid, newstate);
+			-- local message = format("%s-%s", stateid, newstate);
+			self:ChildUpdate("state", newstate);
 		]]
 	bar:SetAttribute("_onstate-state", stateHandler);
-	RegisterStateDriver(bar, "state", "[help]heal;default");
 	bar:SetAttribute("state-state", "default");
 end
 
@@ -85,6 +101,27 @@ function addon:SetupMasque(bar)
 			button:AddToMasque(msqGroup);
 		end
 	end
+	if(msqGroup) then
+		msqGroup:ReSkin();
+	end
+end
+
+-- If a labtype or labaction attribute then set the appropriate config.
+local function OnButtonAttributeChanged(button, name, value)
+
+	local _,_,target, state = string.find(name,"^lab([%a]+)-([%a%d]+)$");
+	if(state and target) then
+		addon:Print(state);
+		addon:Print(target);
+		local config = button[addonName .. "config"];
+
+		if (not config.states[state]) then
+			config.states[state] = {type = "empty", action = 0};
+		end
+
+		local state = config.states[state];
+		state[target] = value;
+	end
 end
 
 function addon:GenerateButtons(bar)
@@ -95,8 +132,29 @@ function addon:GenerateButtons(bar)
 	for index, buttonConfig in ipairs(buttonConfigs) do
 		local buttonName = bar:GetName() .. "_Button" .. index;
 		local button = LibActionButton:CreateButton(buttonName, buttonName, bar, buttonConfig.labConfig);
+		button:HookScript("OnAttributeChanged", OnButtonAttributeChanged);
+
+		--		button:SetAttribute("_childupdate-state", [[
+		--			local unit, state = strsplit("-", message, 2);
+		--			print(message);
+		--			local confMode = ((not PlayerInCombat()) and self:GetAttribute("confmode")) or false;
+		--
+		--			if((confMode or UnitExists(unit)) and self:GetAttribute("labtype-%s", state)) then
+		--				print("Conf: " .. tostring(confMode));
+		--				--state = "default";
+		--				--unit = nil;
+		--				print(format("Unit: " .. tostring(unit) .. "\n State:" .. tostring(state)));
+		--				self:SetAttribute("unit", unit);
+		--				self:RunAttribute("UpdateState", state);
+		--				self:CallMethod("UpdateAction");
+		--			end
+		--
+		--		]])
 		button[addonName .. "config"]= buttonConfig;
 		button:SetState("default", "action", index);
+		for state, values in pairs(buttonConfig.states) do
+			button:SetState(state, values.type, values.action);
+		end
 
 		if(lastButton) then
 			button:SetPoint("TOPLEFT", lastButton, "TOPRIGHT", 2, 0);
@@ -122,8 +180,8 @@ end
 
 function addon:GetSpellBookId(spell)
 	return FindSpellBookSlotBySpellID(spell);
-	
-	
+
+
 end
 
 -- Thanks to Nevcairiel, nicked this function from Bartender4.
