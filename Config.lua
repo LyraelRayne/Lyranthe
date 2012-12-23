@@ -33,9 +33,24 @@ local buttonDefaults = {
 			action = 0,
 		},
 	},
-	unit = nil;
-	startup_state = "default",
+	attributes = {
+		["useparent-unit"] = true,
+	},
+	unit = nil,
 };
+
+local defaultStates =  {
+					"[@mouseover, harm, mod:ctrl]cc-mo",
+					"[@focus, harm, mod:ctrl]cc-fo",
+					"[@target, harm, mod:ctrl]cc-ta",
+					"[@mouseover,help,nodead]heal-mo",
+					"[@target,help,nodead]heal-ta",
+					"[@mouseover,help,dead]rez-mo",
+					"[@target,help,dead]rez-ta",
+					"[@target,exists]default-ta",
+					"[@mouseover,exists]default-mo",
+					"[]default-df",
+				};
 
 -- Default settings
 local DefaultSettings = {
@@ -57,15 +72,7 @@ local DefaultSettings = {
 					[6] = buttonDefaults,
 					[7] = buttonDefaults,
 				},
-				states = {
-					"[@mouseover, harm, mod:ctrl]cc",
-					"[@focus, harm, mod:ctrl]cc",
-					"[@mouseover,help,nodead]heal",
-					"[@target,help,nodead]heal",
-					"[@mouseover,help,dead]rez",
-					"[@target,help,dead]rez",
-					"default"
-				},
+				states = defaultStates,
 			},
 			[2] = {
 				name = "Bar2",
@@ -83,15 +90,7 @@ local DefaultSettings = {
 					[6] = buttonDefaults,
 					[7] = buttonDefaults,
 				},
-				states = {
-					"[@mouseover, harm, mod:ctrl]cc",
-					"[@focus, harm, mod:ctrl]cc",
-					"[@mouseover,help,nodead]heal",
-					"[@target,help,nodead]heal",
-					"[@mouseover,help,dead]rez",
-					"[@target,help,dead]rez",
-					"default"
-				},
+				states = defaultStates,
 			},
 			[3] = {
 				name = "Bar3",
@@ -107,15 +106,7 @@ local DefaultSettings = {
 					[4] = buttonDefaults,
 					[5] = buttonDefaults,
 				},
-				states = {
-					"[@mouseover, harm, mod:ctrl]cc",
-					"[@focus, harm, mod:ctrl]cc",
-					"[@mouseover,help,nodead]heal",
-					"[@target,help,nodead]heal",
-					"[@mouseover,help,dead]rez",
-					"[@target,help,dead]rez",
-					"default"
-				},
+				states = defaultStates,
 			},
 			[4] = {
 				name = "Bar4",
@@ -129,15 +120,7 @@ local DefaultSettings = {
 					[2] = buttonDefaults,
 					[3] = buttonDefaults,
 				},
-				states = {
-					"[@mouseover, harm, mod:ctrl]cc",
-					"[@focus, harm, mod:ctrl]cc",
-					"[@mouseover,help,nodead]heal",
-					"[@target,help,nodead]heal",
-					"[@mouseover,help,dead]rez",
-					"[@target,help,dead]rez",
-					"default"
-				},
+				states = defaultStates,
 			},
 		},
 	},

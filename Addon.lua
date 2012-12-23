@@ -54,17 +54,25 @@ local function BuildStateFromStates(states)
 			stateString = stateString .. ";"
 		end
 	end
-	print(stateString);
 	return stateString;
 end
 
 local function AssignBarStateHandler(bar)
 
-	local state = BuildStateFromStates(bar.config.states);
-	RegisterStateDriver(bar, "state", state);
+	local stateConditions = BuildStateFromStates(bar.config.states);
+	RegisterStateDriver(bar, "state", stateConditions);
+	bar:SetAttribute("stateConditions", stateConditions);
 
 	local stateHandler = [[
-			-- local message = format("%s-%s", stateid, newstate);
+			local stateConditions = self:GetAttribute("stateConditions");
+			local result, target = SecureCmdOptionParse(stateConditions);
+			
+			
+			if(not target)  then
+				target = "target";
+			end
+			newstate = gsub(newstate, "-.*", "");
+			self:SetAttribute("unit", target);
 			self:ChildUpdate("state", newstate);
 		]]
 	bar:SetAttribute("_onstate-state", stateHandler);
@@ -110,11 +118,8 @@ end
 
 -- If a labtype or labaction attribute then set the appropriate config.
 local function OnButtonAttributeChanged(button, name, value)
-
 	local _,_,target, state = string.find(name,"^lab([%a]+)-([%a%d]+)$");
 	if(state and target) then
-		addon:Print(state);
-		addon:Print(target);
 		local config = button[addonName .. "config"];
 
 		if (not config.states[state]) then
@@ -138,21 +143,21 @@ function addon:GenerateButtons(bar)
 		button:HookScript("OnAttributeChanged", OnButtonAttributeChanged);
 
 		button[addonName .. "config"]= buttonConfig;
-		
+
 		for state, values in pairs(buttonConfig.states) do
 			button:SetState(state, values.type, values.action);
 		end
-		
---		if(buttonConfig.states.default.type == "empty" and buttonConfig.states.default.action == 0) then
---			button:SetState("default", "action", index);	
---		end
+
+		--		if(buttonConfig.states.default.type == "empty" and buttonConfig.states.default.action == 0) then
+		--			button:SetState("default", "action", index);
+		--		end
 
 		if(previousButton) then
 			button:SetPoint("TOPLEFT", previousButton, "TOPRIGHT", 2, 0);
 		else
 			button:SetPoint("TOPLEFT");
 		end
-		
+
 		if(not firstButton) then
 			firstButton = button
 		end
@@ -164,7 +169,7 @@ function addon:GenerateButtons(bar)
 end
 
 function addon:ConfigureButton(button)
-	local config = button.config;
+	local config = button[addonName .. "config"];
 	if(config.width and config.height) then
 		button:SetSize(config.width, config.height);
 	end
