@@ -6,12 +6,13 @@
 -- Pending Functionality:
 
 local addonName = "Lyranthe";
-
 Lyranthe = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "AceEvent-3.0");
-Lyranthe.BAR_TEMPLATE = "LyrantheButtonBar";
-Lyranthe.BUTTON_TEMPLATE = "LyrantheButton";
-
 local addon = Lyranthe;
+
+addon.BAR_TEMPLATE = "LyrantheButtonBar";
+addon.BUTTON_TEMPLATE = "LyrantheButton";
+addon.BUTTON_SIDE_LENGTH = 38;
+
 local LibKeyBound = LibStub("LibKeyBound-1.0");
 local LibActionButton = LibStub("LibActionButton-1.0");
 local Masque = LibStub("Masque", true);
@@ -80,6 +81,7 @@ function addon:GenerateBars()
 		bar:SetPoint(barConfig.anchorPoint, barConfig.relativeTo, barConfig.relativePoint, barConfig.xOffset, barConfig.yOffset);
 		bar.config = barConfig;
 		self.bars[barName] = bar;
+		bar.buttons = {};
 		self:GenerateButtons(bar);
 		self:SetupMasque(bar);
 		AssignBarStateHandler(bar);
@@ -128,42 +130,33 @@ function addon:GenerateButtons(bar)
 	local config = bar.config;
 
 	local buttonConfigs = config.buttons;
-	local lastbutton = nil;
+	local previousButton = nil;
+	local firstButton = nil;
 	for index, buttonConfig in ipairs(buttonConfigs) do
 		local buttonName = bar:GetName() .. "_Button" .. index;
 		local button = LibActionButton:CreateButton(buttonName, buttonName, bar, buttonConfig.labConfig);
 		button:HookScript("OnAttributeChanged", OnButtonAttributeChanged);
 
-		--		button:SetAttribute("_childupdate-state", [[
-		--			local unit, state = strsplit("-", message, 2);
-		--			print(message);
-		--			local confMode = ((not PlayerInCombat()) and self:GetAttribute("confmode")) or false;
-		--
-		--			if((confMode or UnitExists(unit)) and self:GetAttribute("labtype-%s", state)) then
-		--				print("Conf: " .. tostring(confMode));
-		--				--state = "default";
-		--				--unit = nil;
-		--				print(format("Unit: " .. tostring(unit) .. "\n State:" .. tostring(state)));
-		--				self:SetAttribute("unit", unit);
-		--				self:RunAttribute("UpdateState", state);
-		--				self:CallMethod("UpdateAction");
-		--			end
-		--
-		--		]])
 		button[addonName .. "config"]= buttonConfig;
 		button:SetState("default", "action", index);
 		for state, values in pairs(buttonConfig.states) do
 			button:SetState(state, values.type, values.action);
 		end
 
-		if(lastButton) then
-			button:SetPoint("TOPLEFT", lastButton, "TOPRIGHT", 2, 0);
+		if(previousButton) then
+			button:SetPoint("TOPLEFT", previousButton, "TOPRIGHT", 2, 0);
 		else
 			button:SetPoint("TOPLEFT");
 		end
+		
+		if(not firstButton) then
+			firstButton = button
+		end
 		self:ConfigureButton(button);
-		lastButton = button;
+		previousButton = button;
+		bar.buttons[index] = button;
 	end
+	bar:SetWidth(previousButton:GetRight() - firstButton:GetLeft());
 end
 
 function addon:ConfigureButton(button)
