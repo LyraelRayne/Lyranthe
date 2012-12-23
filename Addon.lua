@@ -68,8 +68,12 @@ local function AssignBarStateHandler(bar)
 			local result, target = SecureCmdOptionParse(stateConditions);
 			
 			
-			if(not target)  then
-				target = "target";
+--			if(not target)  then
+--				target = "target";
+--			end
+			
+			if(newstate == "override") then
+				target = nil;
 			end
 			newstate = gsub(newstate, "-.*", "");
 			self:SetAttribute("unit", target);

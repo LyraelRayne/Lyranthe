@@ -40,6 +40,7 @@ local buttonDefaults = {
 };
 
 local defaultStates =  {
+					"[overridebar][vehicleui][possessbar,@vehicle,exists]override",
 					"[@mouseover, harm, mod:ctrl]cc-mo",
 					"[@focus, harm, mod:ctrl]cc-fo",
 					"[@target, harm, mod:ctrl]cc-ta",
@@ -58,11 +59,11 @@ local DefaultSettings = {
 		bars = {
 			[1] = {
 				name = "Bar1",
-				relativeTo = "ActionButton1",
+				relativeTo = "UIParent",
 				anchorPoint = "BOTTOMLEFT",
-				relativePoint = "TOPLEFT",
-				xOffset = 0,
-				yOffset = 120,
+				relativePoint = "BOTTOMLEFT",
+				xOffset = 430,
+				yOffset = 160,
 				buttons = {
 					[1] = buttonDefaults,
 					[2] = buttonDefaults,
@@ -76,11 +77,11 @@ local DefaultSettings = {
 			},
 			[2] = {
 				name = "Bar2",
-				relativeTo = "ActionButton1",
+				relativeTo = "UIParent",
 				anchorPoint = "BOTTOMLEFT",
-				relativePoint = "TOPLEFT",
-				xOffset = 0,
-				yOffset = 80,
+				relativePoint = "BOTTOMLEFT",
+				xOffset = 430,
+				yOffset = 120,
 				buttons = {
 					[1] = buttonDefaults,
 					[2] = buttonDefaults,
@@ -94,11 +95,11 @@ local DefaultSettings = {
 			},
 			[3] = {
 				name = "Bar3",
-				relativeTo = "ActionButton1",
+				relativeTo = "UIParent",
 				anchorPoint = "BOTTOMLEFT",
-				relativePoint = "TOPLEFT",
-				xOffset = 38,
-				yOffset = 40,
+				relativePoint = "BOTTOMLEFT",
+				xOffset = 468,
+				yOffset = 80,
 				buttons = {
 					[1] = buttonDefaults,
 					[2] = buttonDefaults,
@@ -110,11 +111,11 @@ local DefaultSettings = {
 			},
 			[4] = {
 				name = "Bar4",
-				relativeTo = "ActionButton1",
+				relativeTo = "UIParent",
 				anchorPoint = "BOTTOMLEFT",
-				relativePoint = "TOPLEFT",
-				xOffset = 76,
-				yOffset = 0,
+				relativePoint = "BOTTOMLEFT",
+				xOffset = 506,
+				yOffset = 40,
 				buttons = {
 					[1] = buttonDefaults,
 					[2] = buttonDefaults,
