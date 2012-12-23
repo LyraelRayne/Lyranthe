@@ -40,28 +40,14 @@ local buttonDefaults = {
 -- Default settings
 local DefaultSettings = {
 	profile = {
-		bars = {
+		groups = {
 			[1] = {
-				name = "Bar1",
+				name = "Group1",
 				relativeTo = "ActionButton1",
 				anchorPoint = "BOTTOMLEFT",
 				relativePoint = "TOPLEFT",
 				xOffset = 0,
 				yOffset = 100,
-				buttons = {
-					[1] = buttonDefaults,
-					[2] = buttonDefaults,
-					[3] = buttonDefaults,
-					[4] = buttonDefaults,
-					[5] = buttonDefaults,
-					[6] = buttonDefaults,
-					[7] = buttonDefaults,
-					[8] = buttonDefaults,
-					[9] = buttonDefaults,
-					[10]= buttonDefaults,
-					[11]= buttonDefaults,
-					[12]= buttonDefaults,
-				},
 				states = {
 					"[@mouseover, harm, mod:ctrl]cc",
 					"[@focus, harm, mod:ctrl]cc",
@@ -70,7 +56,83 @@ local DefaultSettings = {
 					"[@mouseover,help,dead]rez",
 					"[@target,help,dead]rez",
 					"default"
-				}
+				},
+				bars = {
+					[1] = {
+						buttons = {
+							[1] = buttonDefaults,
+							[2] = buttonDefaults,
+							[3] = buttonDefaults,
+							[4] = buttonDefaults,
+							[5] = buttonDefaults,
+							[6] = buttonDefaults,
+							[7] = buttonDefaults,
+						},
+						states = {
+							"[@mouseover, harm, mod:ctrl]cc",
+							"[@focus, harm, mod:ctrl]cc",
+							"[@mouseover,help,nodead]heal",
+							"[@target,help,nodead]heal",
+							"[@mouseover,help,dead]rez",
+							"[@target,help,dead]rez",
+							"default"
+						}
+					},
+					[2] = {
+						buttons = {
+							[1] = buttonDefaults,
+							[2] = buttonDefaults,
+							[3] = buttonDefaults,
+							[4] = buttonDefaults,
+							[5] = buttonDefaults,
+							[6] = buttonDefaults,
+							[7] = buttonDefaults,
+						},
+						states = {
+							"[@mouseover, harm, mod:ctrl]cc",
+							"[@focus, harm, mod:ctrl]cc",
+							"[@mouseover,help,nodead]heal",
+							"[@target,help,nodead]heal",
+							"[@mouseover,help,dead]rez",
+							"[@target,help,dead]rez",
+							"default"
+						},
+					},
+					[3] = {
+						buttons = {
+							[1] = buttonDefaults,
+							[2] = buttonDefaults,
+							[3] = buttonDefaults,
+							[4] = buttonDefaults,
+							[5] = buttonDefaults,
+						},
+						states = {
+							"[@mouseover, harm, mod:ctrl]cc",
+							"[@focus, harm, mod:ctrl]cc",
+							"[@mouseover,help,nodead]heal",
+							"[@target,help,nodead]heal",
+							"[@mouseover,help,dead]rez",
+							"[@target,help,dead]rez",
+							"default"
+						},
+					},
+					[4] = {
+						buttons = {
+							[1] = buttonDefaults,
+							[2] = buttonDefaults,
+							[3] = buttonDefaults,
+						},
+						states = {
+							"[@mouseover, harm, mod:ctrl]cc",
+							"[@focus, harm, mod:ctrl]cc",
+							"[@mouseover,help,nodead]heal",
+							"[@target,help,nodead]heal",
+							"[@mouseover,help,dead]rez",
+							"[@target,help,dead]rez",
+							"default"
+						},
+					},
+				},
 			},
 		},
 	},

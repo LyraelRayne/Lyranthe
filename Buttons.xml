@@ -1,12 +1,26 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
 
-	<Frame name="LyrantheButtonBar" toplevel="true"
-		frameStrata="HIGH" inherits="SecureHandlerStateTemplate" virtual="true" hidden="true">
+	<Frame name="LyrantheButtonBar" toplevel="true" frameStrata="HIGH"
+		inherits="SecureHandlerStateTemplate" virtual="true" hidden="false">
 		<Size>
 			<AbsDimension x="500" y="38" />
 		</Size>
-		<!-- <Scripts> <OnLoad> Lyranthe:AssignStateHandler(self); </OnLoad> </Scripts> -->
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
+			edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+			<BackgroundInsets>
+				<AbsInset left="11" right="12" top="12" bottom="11" />
+			</BackgroundInsets>
+			<TileSize>
+				<AbsValue val="32" />
+			</TileSize>
+			<EdgeSize>
+				<AbsValue val="32" />
+			</EdgeSize>
+		</Backdrop>
+	</Frame>
+	<Frame name="LyrantheButtonBarGroup" virtual="true" hidden="true">
+
 	</Frame>
 </Ui>
 
