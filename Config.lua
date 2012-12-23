@@ -40,28 +40,42 @@ local buttonDefaults = {
 -- Default settings
 local DefaultSettings = {
 	profile = {
-		bars = {
+		groups = {
 			[1] = {
-				name = "Bar1",
+				name = "Group1",
 				relativeTo = "ActionButton1",
 				anchorPoint = "BOTTOMLEFT",
 				relativePoint = "TOPLEFT",
 				xOffset = 0,
 				yOffset = 100,
-				buttons = {
-					[1] = buttonDefaults,
-					[2] = buttonDefaults,
-					[3] = buttonDefaults,
-					[4] = buttonDefaults,
-					[5] = buttonDefaults,
-					[6] = buttonDefaults,
-					[7] = buttonDefaults,
-					[8] = buttonDefaults,
-					[9] = buttonDefaults,
-					[10]= buttonDefaults,
-					[11]= buttonDefaults,
-					[12]= buttonDefaults,
+				rows = {
+					[1] = {buttons = {
+							[1] = buttonDefaults,
+							[2] = buttonDefaults,
+							[3] = buttonDefaults,
+							[4] = buttonDefaults,
+							[5] = buttonDefaults,
+							[6] = buttonDefaults,
+							[7] = buttonDefaults,
+							[8] = buttonDefaults,
+							[9] = buttonDefaults,
+							[10]= buttonDefaults,
+							[11]= buttonDefaults,
+							[12]= buttonDefaults,
+							[13]= buttonDefaults,
+							[14]= buttonDefaults,
+							[15]= buttonDefaults,
+							[16]= buttonDefaults,
+							[17]= buttonDefaults,
+							[18]= buttonDefaults,
+							[19]= buttonDefaults,
+							[20]= buttonDefaults,
+							[21]= buttonDefaults,
+							[22]= buttonDefaults,
+						},
+					},
 				},
+
 				states = {
 					"[@mouseover, harm, mod:ctrl]cc",
 					"[@focus, harm, mod:ctrl]cc",

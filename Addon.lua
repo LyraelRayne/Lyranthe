@@ -6,17 +6,20 @@
 -- Pending Functionality:
 
 local addonName = "Lyranthe";
-
 Lyranthe = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "AceEvent-3.0");
-Lyranthe.BAR_TEMPLATE = "LyrantheButtonBar";
-Lyranthe.BUTTON_TEMPLATE = "LyrantheButton";
-
 local addon = Lyranthe;
+
+addon.GROUP_TEMPLATE = "LyrantheButtonGroup";
+addon.ROW_TEMPLATE = "LyrantheButtonGroupRow";
+addon.BUTTON_TEMPLATE = "LyrantheButton";
+addon.ROW_HEIGHT = 38;
+
+
 local LibKeyBound = LibStub("LibKeyBound-1.0");
 local LibActionButton = LibStub("LibActionButton-1.0");
 local Masque = LibStub("Masque", true);
 
-addon.bars = {};
+addon.groups = {};
 
 function addon:OnInitialize()
 	self:InitConfig();
@@ -32,7 +35,7 @@ end
 
 function addon:OnEnable(first)
 
-	self:GenerateBars();
+	self:GenerateGroups();
 	self:SetupOSD(State_Display);
 
 --	LibKeyBound.RegisterCallback(self, "LIBKEYBOUND_ENABLED")
@@ -57,45 +60,48 @@ local function BuildStateFromStates(states)
 	return stateString;
 end
 
-local function AssignBarStateHandler(bar)
+local function AssignGroupStateHandler(group)
 
-	local state = BuildStateFromStates(bar.config.states);
-	RegisterStateDriver(bar, "state", state);
+	local state = BuildStateFromStates(group.config.states);
+	RegisterStateDriver(group, "state", state);
 
 	local stateHandler = [[
 			-- local message = format("%s-%s", stateid, newstate);
 			self:ChildUpdate("state", newstate);
 		]]
-	bar:SetAttribute("_onstate-state", stateHandler);
-	bar:SetAttribute("state-state", "default");
+	group:SetAttribute("_onstate-state", stateHandler);
+	group:SetAttribute("state-state", "default");
 end
 
-function addon:GenerateBars()
+function addon:GenerateGroups()
 	local profile = addon.configDB.profile;
 
-	for index, barConfig in ipairs(profile.bars) do
-		local barName = barConfig.name;
-		local barFrameName = self:GetName() .. "_" .. barName;
-		local bar = CreateFrame("Frame", barFrameName, UIParent, self.BAR_TEMPLATE);
-		bar:SetPoint(barConfig.anchorPoint, barConfig.relativeTo, barConfig.relativePoint, barConfig.xOffset, barConfig.yOffset);
-		bar.config = barConfig;
-		self.bars[barName] = bar;
-		self:GenerateButtons(bar);
-		self:SetupMasque(bar);
-		AssignBarStateHandler(bar);
-		bar:Show();
+	for index, groupConfig in ipairs(profile.groups) do
+		local groupName = groupConfig.name;
+		local groupFrameName = self:GetName() .. "_" .. groupName;
+		local group = _G[groupFrameName];
+		if(not group) then
+			group = CreateFrame("Frame", groupFrameName, UIParent, self.GROUP_TEMPLATE);
+		end
+		group:SetPoint(groupConfig.anchorPoint, groupConfig.relativeTo, groupConfig.relativePoint, groupConfig.xOffset, groupConfig.yOffset);
+		group.config = groupConfig;
+		self.groups[groupName] = group;
+		self:GenerateRows(group);
+		self:SetupMasque(group);
+		AssignGroupStateHandler(group);
+		group:Show();
 	end
 
 end
 
-function addon:SetupMasque(bar)
-	local config = bar.config;
+function addon:SetupMasque(group)
+	local config = group.config;
 	local msqGroup = nil;
 	if(Masque) then
 		msqGroup = Masque:Group(self:GetName(), config.name);
 	end
 
-	local buttons = {bar:GetChildren()};
+	local buttons = {group:GetChildren()};
 	for _,button in ipairs(buttons) do
 		if(msqGroup) then
 			button:AddToMasque(msqGroup);
@@ -124,14 +130,33 @@ local function OnButtonAttributeChanged(button, name, value)
 	end
 end
 
-function addon:GenerateButtons(bar)
-	local config = bar.config;
+function addon:GenerateRows(group)
+	local groupConfig = group.config;
+	local groupName = group:GetName();
+
+	local rowConfigs = groupConfig.rows;
+
+	for rowNum, config in ipairs(rowConfigs) do
+		local rowName = groupName .. "_Row" .. rowNum;
+		local row = CreateFrame("Frame", rowName, group, self.ROW_TEMPLATE);
+		row:SetPoint("LEFT");
+		row:SetPoint("RIGHT");
+		row:SetPoint("TOP", group, "TOP", 0, -addon.ROW_HEIGHT * (rowNum - 1));
+		row:SetHeight(addon.ROW_HEIGHT);
+		row.config = config;
+		self:GenerateButtons(group, row);
+	end
+end
+
+function addon:GenerateButtons(group, row)
+	local rowConfig = row.config;
+	local groupConfig = group.config;
 
 	local buttonConfigs = config.buttons;
 	local lastbutton = nil;
 	for index, buttonConfig in ipairs(buttonConfigs) do
-		local buttonName = bar:GetName() .. "_Button" .. index;
-		local button = LibActionButton:CreateButton(buttonName, buttonName, bar, buttonConfig.labConfig);
+		local buttonName = group:GetName() .. "_Button" .. index;
+		local button = LibActionButton:CreateButton(buttonName, buttonName, group, buttonConfig.labConfig);
 		button:HookScript("OnAttributeChanged", OnButtonAttributeChanged);
 
 		--		button:SetAttribute("_childupdate-state", [[
@@ -159,8 +184,9 @@ function addon:GenerateButtons(bar)
 		if(lastButton) then
 			button:SetPoint("TOPLEFT", lastButton, "TOPRIGHT", 2, 0);
 		else
-			button:SetPoint("TOPLEFT");
+			button:SetPoint("TOPLEFT", row);
 		end
+
 		self:ConfigureButton(button);
 		lastButton = button;
 	end
