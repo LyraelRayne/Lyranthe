@@ -138,10 +138,14 @@ function addon:GenerateButtons(bar)
 		button:HookScript("OnAttributeChanged", OnButtonAttributeChanged);
 
 		button[addonName .. "config"]= buttonConfig;
-		button:SetState("default", "action", index);
+		
 		for state, values in pairs(buttonConfig.states) do
 			button:SetState(state, values.type, values.action);
 		end
+		
+--		if(buttonConfig.states.default.type == "empty" and buttonConfig.states.default.action == 0) then
+--			button:SetState("default", "action", index);	
+--		end
 
 		if(previousButton) then
 			button:SetPoint("TOPLEFT", previousButton, "TOPRIGHT", 2, 0);
