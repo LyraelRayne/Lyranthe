@@ -10,6 +10,5 @@ embeds.xml
 
 Addon.lua
 Config.lua
-#OSD.lua
-#OSD.xml
+DynamicFrame.xml
 Buttons.xml
