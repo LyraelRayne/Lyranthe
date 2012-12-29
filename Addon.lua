@@ -34,7 +34,6 @@ end
 function addon:OnEnable(first)
 
 	self:GenerateBars();
-	self:SetupOSD(State_Display);
 
 --	LibKeyBound.RegisterCallback(self, "LIBKEYBOUND_ENABLED")
 --	LibKeyBound.RegisterCallback(self, "LIBKEYBOUND_DISABLED")
