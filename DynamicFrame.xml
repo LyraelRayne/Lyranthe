@@ -14,8 +14,6 @@
 			</minResize>
 		</ResizeBounds>
 		<TitleRegion setAllPoints="true" />
-		<Backdrop tile="true">
-		</Backdrop>
 		<!-- <Layers> <Layer level="ARTWORK"> </Layer> </Layers> -->
 		<Scripts>
 			<OnLoad>
@@ -201,7 +199,7 @@
 								<Anchor point="TOPRIGHT" x="-2" y="0" />
 								<Anchor point="BOTTOMLEFT" />
 							</Anchors>
-							<TexCoords left="1" right="0.51" top="0.2" bottom="1" />
+							<TexCoords left="1" right="0.51" top="0.51" bottom="1" />
 						</HighlightTexture>
 					</Button>
 					<Button name="$parent_Top" enableMouse="true">
