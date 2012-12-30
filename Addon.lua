@@ -15,7 +15,7 @@ addon.BUTTON_SIDE_LENGTH = 36;
 
 local LibKeyBound = LibStub("LibKeyBound-1.0");
 local LibActionButton = LibStub("LibActionButton-1.0");
-local Masque = LibStub("Masque", true);
+
 
 addon.bars = {};
 

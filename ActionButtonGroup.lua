@@ -7,6 +7,7 @@ local profile = nil;
 local configKey = addonName .. "GroupConfig"
 
 local LibActionButton = LibStub("LibActionButton-1.0");
+local Masque = LibStub("Masque", true);
 
 local spacing = 4;
 local offset = addon.BUTTON_SIDE_LENGTH + spacing;
@@ -33,14 +34,20 @@ groupPrototype.configBackdrop = {
 
 function addon:CreateGroup(name)
 	local group = CreateFrame("Frame", name, UIParent, addon.GROUP_TEMPLATE);
+	group:AssignMasqueGroup();
 	group:ClearAllPoints();
 	group:EnableConfigMode();
 	group.buttons = {};
 	group:SetScript("OnSizeChanged", group.OnSizeChanged);
 	group:LoadConfig();
 	group:Show();
-	
+
 	return group;
+end
+
+function groupPrototype:AssignMasqueGroup()
+	local groupName = self:GetName();
+	self.masqueGroup = Masque:Group(addonName, groupName);
 end
 
 function groupPrototype:LoadConfig()
@@ -74,6 +81,13 @@ local function ClearSpareButtons(group, maxButtons)
 		button:Hide();
 		buttonIndex = buttonIndex + 1;
 	end
+end
+
+function groupPrototype:RemoveButton(button)
+	button:SetParent(nil);
+	button:Hide();
+	self.buttons[buttonIndex] = nil;
+	self.masqueGroup:RemoveButton(button);
 end
 
 function groupPrototype:FillWithButtons()
@@ -112,6 +126,7 @@ function groupPrototype:AddButton()
 	end
 	buttons[buttonIndex] = button;
 	button.positionInGroup = buttonIndex;
+	self.masqueGroup:AddButton(button);
 	return button;
 end
 
