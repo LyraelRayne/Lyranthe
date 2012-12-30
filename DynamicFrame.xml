@@ -1,0 +1,273 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+
+	<Frame name="DynamicResizeFrame" frameStrata="MEDIUM" hidden="true" clampedToScreen="true" resizable="true"
+		movable="true" virtual="true">
+		<Size>
+			<AbsDimension x="10" y="32" />
+		</Size>
+		<Anchors>
+			<Anchor point="BOTTOM" />
+		</Anchors>
+		<ResizeBounds>
+			<minResize>
+				<AbsDimension x="50" y="50" />
+			</minResize>
+		</ResizeBounds>
+		<TitleRegion setAllPoints="true" />
+		<Backdrop tile="true">
+		</Backdrop>
+		<!-- <Layers> <Layer level="ARTWORK"> </Layer> </Layers> -->
+		<Scripts>
+			<OnLoad>
+				self:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b);
+				self:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b);
+			</OnLoad>
+		</Scripts>
+		<Frames>
+			<Frame name="$parent_Sizer" enableMouse="false" enableKeyboard="false" setAllPoints="true">
+				<Frames>
+					<Button name="$parent_TopLeft" enableMouse="true">
+						<Anchors>
+							<Anchor point="TOPLEFT" />
+							<Anchor point="BOTTOMRIGHT" relativePoint="TOPLEFT" x="15" y="-15" />
+						</Anchors>
+						<Scripts>
+							<OnMouseDown>
+						self:GetParent():GetParent():StartSizing("topleft");
+					</OnMouseDown>
+							<OnMouseUp>
+						self:GetParent():GetParent():StopMovingOrSizing();
+						-- commitwindowchanges
+					</OnMouseUp>
+						</Scripts>
+						<PushedTexture file="Interface\addons\Lyranthe\sizer.tga" alpha="1">
+							<Anchors>
+								<Anchor point="TOPLEFT" x="2" y="-2" />
+								<Anchor point="BOTTOMRIGHT" relativePoint="TOPLEFT" x="15" y="-15" />
+							</Anchors>
+							<TexCoords left="0" right="0.5" top="0" bottom="0.5" />
+						</PushedTexture>
+						<HighlightTexture file="Interface\addons\Lyranthe\sizer.tga" alpha="0.5">
+							<Anchors>
+								<Anchor point="TOPLEFT" x="2" y="-2" />
+								<Anchor point="BOTTOMRIGHT" relativePoint="TOPLEFT" x="15" y="-15" />
+							</Anchors>
+							<TexCoords left="0" right="0.5" top="0" bottom="0.5" />
+						</HighlightTexture>
+					</Button>
+					<Button name="$parent_BottomLeft" enableMouse="true">
+						<Anchors>
+							<Anchor point="BOTTOMLEFT" />
+							<Anchor point="TOPRIGHT" relativePoint="BOTTOMLEFT" x="15" y="15" />
+						</Anchors>
+						<Scripts>
+							<OnMouseDown>
+						self:GetParent():GetParent():StartSizing("bottomleft");
+							</OnMouseDown>
+							<OnMouseUp>
+						self:GetParent():GetParent():StopMovingOrSizing();
+						-- commitwindowchanges
+							</OnMouseUp>
+						</Scripts>
+						<PushedTexture file="Interface\addons\Lyranthe\sizer.tga" alpha="1">
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" x="2" y="2" />
+								<Anchor point="TOPRIGHT" relativePoint="BOTTOMLEFT" x="15" y="15" />
+							</Anchors>
+							<TexCoords left="0" right="0.5" top="0.5" bottom="0" />
+						</PushedTexture>
+						<HighlightTexture file="Interface\addons\Lyranthe\sizer.tga" alpha="0.5">
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" x="2" y="2" />
+								<Anchor point="TOPRIGHT" relativePoint="BOTTOMLEFT" x="15" y="15" />
+							</Anchors>
+							<TexCoords left="0" right="0.5" top="0.5" bottom="0" />
+						</HighlightTexture>
+					</Button>
+					<Button name="$parent_BottomRight" enableMouse="true">
+						<Anchors>
+							<Anchor point="BOTTOMRIGHT" />
+							<Anchor point="TOPLEFT" relativePoint="BOTTOMRIGHT" x="-15" y="15" />
+						</Anchors>
+						<Scripts>
+							<OnMouseDown>
+						self:GetParent():GetParent():StartSizing("bottomright");
+					</OnMouseDown>
+							<OnMouseUp>
+						self:GetParent():GetParent():StopMovingOrSizing();
+						-- commitwindowchanges
+					</OnMouseUp>
+						</Scripts>
+						<PushedTexture file="Interface\addons\Lyranthe\sizer.tga" alpha="1">
+							<Anchors>
+								<Anchor point="BOTTOMRIGHT" x="-2" y="2" />
+								<Anchor point="TOPLEFT" relativePoint="BOTTOMRIGHT" x="-15" y="15" />
+							</Anchors>
+							<TexCoords left="0.5" right="0" top="0.5" bottom="0" />
+						</PushedTexture>
+						<HighlightTexture file="Interface\addons\Lyranthe\sizer.tga" alpha="0.5">
+							<Anchors>
+								<Anchor point="BOTTOMRIGHT" x="-2" y="2" />
+								<Anchor point="TOPLEFT" relativePoint="BOTTOMRIGHT" x="-15" y="15" />
+							</Anchors>
+							<TexCoords left="0.5" right="0" top="0.5" bottom="0" />
+						</HighlightTexture>
+					</Button>
+					<Button name="$parent_TopRight" enableMouse="true">
+						<Anchors>
+							<Anchor point="TOPRIGHT" />
+							<Anchor point="BOTTOMLEFT" relativePoint="TOPRIGHT" x="-15" y="-15" />
+						</Anchors>
+						<Scripts>
+							<OnMouseDown>
+						self:GetParent():GetParent():StartSizing("topright");
+					</OnMouseDown>
+							<OnMouseUp>
+						self:GetParent():GetParent():StopMovingOrSizing();
+						-- commitwindowchanges
+					</OnMouseUp>
+						</Scripts>
+						<PushedTexture file="Interface\addons\Lyranthe\sizer.tga" alpha="1">
+							<Anchors>
+								<Anchor point="TOPRIGHT" x="-2" y="-2" />
+								<Anchor point="BOTTOMLEFT" relativePoint="TOPRIGHT" x="-15" y="-15" />
+							</Anchors>
+							<TexCoords left="0.5" right="0" top="0" bottom="0.5" />
+						</PushedTexture>
+						<HighlightTexture file="Interface\addons\Lyranthe\sizer.tga" alpha="0.5">
+							<Anchors>
+								<Anchor point="TOPRIGHT" x="-2" y="-2" />
+								<Anchor point="BOTTOMLEFT" relativePoint="TOPRIGHT" x="-15" y="-15" />
+							</Anchors>
+							<TexCoords left="0.5" right="0" top="0" bottom="0.5" />
+						</HighlightTexture>
+					</Button>
+					<Button name="$parent_Left" enableMouse="true">
+						<Anchors>
+							<Anchor point="LEFT" />
+							<Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$parent_TopLeft" />
+							<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parent_TopLeft" />
+							<Anchor point="BOTTOM" relativePoint="TOP" relativeTo="$parent_BottomLeft" />
+						</Anchors>
+						<Scripts>
+							<OnMouseDown>
+						self:GetParent():GetParent():StartSizing("left");
+					</OnMouseDown>
+							<OnMouseUp>
+						self:GetParent():GetParent():StopMovingOrSizing();
+						-- commitwindowchanges
+					</OnMouseUp>
+						</Scripts>
+						<PushedTexture file="Interface\addons\Lyranthe\sizer.tga" alpha="1">
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" x="2" y="0" />
+								<Anchor point="TOPRIGHT" />
+							</Anchors>
+							<TexCoords left="0.51" right="1" top="0.5" bottom="1" />
+						</PushedTexture>
+						<HighlightTexture file="Interface\addons\Lyranthe\sizer.tga" alpha="0.5">
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" x="2" y="0" />
+								<Anchor point="TOPRIGHT" />
+							</Anchors>
+							<TexCoords left="0.51" right="1" top="0.5" bottom="1" />
+						</HighlightTexture>
+					</Button>
+					<Button name="$parent_Right" enableMouse="true">
+						<Anchors>
+							<Anchor point="RIGHT" />
+							<Anchor point="LEFT" relativePoint="LEFT" relativeTo="$parent_TopRight" />
+							<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parent_TopRight" />
+							<Anchor point="BOTTOM" relativePoint="TOP" relativeTo="$parent_BottomRight" />
+						</Anchors>
+						<Scripts>
+							<OnMouseDown>
+						self:GetParent():GetParent():StartSizing("right");
+					</OnMouseDown>
+							<OnMouseUp>
+						self:GetParent():GetParent():StopMovingOrSizing();
+						-- commitwindowchanges
+					</OnMouseUp>
+						</Scripts>
+						<PushedTexture file="Interface\addons\Lyranthe\sizer.tga" alpha="1">
+							<Anchors>
+								<Anchor point="TOPRIGHT" x="-2" y="0" />
+								<Anchor point="BOTTOMLEFT" />
+							</Anchors>
+							<TexCoords left="1" right="0.51" top="0.5" bottom="1" />
+						</PushedTexture>
+						<HighlightTexture file="Interface\addons\Lyranthe\sizer.tga" alpha="0.5">
+							<Anchors>
+								<Anchor point="TOPRIGHT" x="-2" y="0" />
+								<Anchor point="BOTTOMLEFT" />
+							</Anchors>
+							<TexCoords left="1" right="0.51" top="0.2" bottom="1" />
+						</HighlightTexture>
+					</Button>
+					<Button name="$parent_Top" enableMouse="true">
+						<Anchors>
+							<Anchor point="TOP" />
+							<Anchor point="BOTTOM" relativePoint="BOTTOM" relativeTo="$parent_TopLeft" />
+							<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parent_TopRight" />
+							<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parent_TopLeft" />
+						</Anchors>
+						<Scripts>
+							<OnMouseDown>
+						self:GetParent():GetParent():StartSizing("top");
+					</OnMouseDown>
+							<OnMouseUp>
+						self:GetParent():GetParent():StopMovingOrSizing();
+						-- commitwindowchanges
+					</OnMouseUp>
+						</Scripts>
+						<PushedTexture file="Interface\addons\Lyranthe\sizer.tga" alpha="1">
+							<Anchors>
+								<Anchor point="TOPLEFT" x="0" y="-2" />
+								<Anchor point="BOTTOMRIGHT" />
+							</Anchors>
+							<TexCoords left="0.5" right="1" top="0" bottom="0.5" />
+						</PushedTexture>
+						<HighlightTexture file="Interface\addons\Lyranthe\sizer.tga" alpha="0.5">
+							<Anchors>
+								<Anchor point="TOPLEFT" x="0" y="-2" />
+								<Anchor point="BOTTOMRIGHT" />
+							</Anchors>
+							<TexCoords left="0.5" right="1" top="0" bottom="0.5" />
+						</HighlightTexture>
+					</Button>
+					<Button name="$parent_Bottom" enableMouse="true">
+						<Anchors>
+							<Anchor point="BOTTOM" />
+							<Anchor point="TOP" relativePoint="TOP" relativeTo="$parent_BottomLeft" />
+							<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parent_TopRight" />
+							<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parent_TopLeft" />
+						</Anchors>
+						<Scripts>
+							<OnMouseDown>
+						self:GetParent():GetParent():StartSizing("bottom");
+					</OnMouseDown>
+							<OnMouseUp>
+						self:GetParent():GetParent():StopMovingOrSizing();
+						-- commitwindowchanges
+					</OnMouseUp>
+						</Scripts>
+						<PushedTexture file="Interface\addons\Lyranthe\sizer.tga" alpha="1">
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" x="0" y="2" />
+								<Anchor point="TOPRIGHT" />
+							</Anchors>
+							<TexCoords left="0.5" right="1" top="0.5" bottom="0" />
+						</PushedTexture>
+						<HighlightTexture file="Interface\addons\Lyranthe\sizer.tga" alpha="0.5">
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" x="0" y="2" />
+								<Anchor point="TOPRIGHT" />
+							</Anchors>
+							<TexCoords left="0.5" right="1" top="0.5" bottom="0" />
+						</HighlightTexture>
+					</Button>
+				</Frames>
+			</Frame>
+		</Frames>
+	</Frame>
+</Ui>
