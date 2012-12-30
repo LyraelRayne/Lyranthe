@@ -63,30 +63,51 @@ function groupPrototype:LoadConfig()
 	self:SetPoint("CENTER", nil, config.relativePoint, config.centerX, config.centerY);
 end
 
-function groupPrototype:PositionButton(button, row, col)
+function groupPrototype:PositionButton(button)
+	local column = button.column;
+	local row = button.row;
 	button:ClearAllPoints();
-	button:SetPoint("TOPLEFT", self, "TOPLEFT", (col-1)*offset, -(row-1)*offset);
+	button:SetPoint("TOPLEFT", self, "TOPLEFT", (column-1)*offset, -(row-1)*offset);
 end
 
 function groupPrototype:OnSizeChanged(width, height)
 	self:FillWithButtons();
 end
 
-local function ClearSpareButtons(group, maxButtons)
-	local buttons = group.buttons;
-	local buttonIndex = maxButtons + 1;
-	while(buttons[buttonIndex]) do
-		local button = buttons[buttonIndex];
-		button:SetParent(nil);
-		button:Hide();
-		buttonIndex = buttonIndex + 1;
+local function ClearSpareRows(group, startPoint)
+	local buttonRows = group.buttons;
+	if(getn(buttonRows) >= startPoint) then
+		for rowIndex, row in next, buttonRows, startPoint do
+			for columnIndex, button in next, row do
+				group:RemoveButton(button);
+			end
+		end
 	end
+
+	-- Clean out rows below the bottom
+	--	for row = startPoint, buttonRows[row], 1 do
+	--		local buttons = buttonRows[row];
+	--		for column = 1, buttons[column], 1 do
+	--			local button = buttons[column];
+	--
+	--		end
+	--	end
+	--
+	--
+	--	while(buttons[buttonIndex]) do
+	--		local button = buttons[buttonIndex];
+	--		button:SetParent(nil);
+	--		button:Hide();
+	--		buttonIndex = buttonIndex + 1;
+	--	end
 end
 
 function groupPrototype:RemoveButton(button)
+	local column = button.column;
+	local row = button.row;
+	self.buttons[row][column] = nil;
 	button:SetParent(nil);
 	button:Hide();
-	self.buttons[buttonIndex] = nil;
 	self.masqueGroup:RemoveButton(button, true);
 end
 
@@ -95,39 +116,42 @@ function groupPrototype:FillWithButtons()
 	local width = self:GetWidth();
 	local height = self:GetHeight();
 	local rows = floor(height / offset);
-	local cols = floor(width / offset);
+	local columns = floor(width / offset);
 
 	local lastButton = nil;
 	for row = 1, rows, 1 do
-		for col = 1, cols, 1 do
-			local buttonIndex = col + cols*(row - 1);
-			local button = self.buttons[buttonIndex];
-			if(not button) then
-				button = self:AddButton();
-			end
-			button:SetParent(self);
-			self:PositionButton(button, row, col);
-			button:Show();
+		for column = 1, columns, 1 do
+			local button = self:GetButton(row,column);
+			self:AddButton(button);
 		end
 	end
-	ClearSpareButtons(self, (rows * cols))
+	ClearSpareRows(self, rows)
 end
 
-
-
-function groupPrototype:AddButton()
+function groupPrototype:GetButton(row,column)
 	local groupName = self:GetName();
-	local buttonIndex = getn(self.buttons) + 1;
-	local buttonName = groupName .. "_Button" .. buttonIndex;
-	local buttons = self.buttons;
+	local buttonName = groupName .. "_Row" .. row .. "_Button" .. column;
 	local button = _G[buttonName];
 	if not(button) then
 		button =  CreateFrame("CheckButton", buttonName, self, addon.BUTTON_TEMPLATE);
+		
 	end
-	buttons[buttonIndex] = button;
-	button.positionInGroup = buttonIndex;
-	self.masqueGroup:AddButton(button);
+	button.row = row;
+	button.column = column;
+	_G[button:GetName() .. "Count"]:SetText(button.row .. "," .. button.column)
 	return button;
+end
+
+function groupPrototype:AddButton(button)
+	local buttons = self.buttons;
+	local column = button.column;
+	local row = button.row;
+	if(not buttons[row]) then buttons[row] = {} end
+	buttons[row][column] = button;
+	button:SetParent(self);
+	self.masqueGroup:AddButton(button);
+	self:PositionButton(button);
+	button:Show();
 end
 
 function groupPrototype:EnableConfigMode()
