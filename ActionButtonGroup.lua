@@ -87,7 +87,7 @@ function groupPrototype:RemoveButton(button)
 	button:SetParent(nil);
 	button:Hide();
 	self.buttons[buttonIndex] = nil;
-	self.masqueGroup:RemoveButton(button);
+	self.masqueGroup:RemoveButton(button, true);
 end
 
 function groupPrototype:FillWithButtons()
