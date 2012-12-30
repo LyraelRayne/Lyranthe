@@ -78,8 +78,8 @@ end
 
 function groupPrototype:FillWithButtons()
 	local scale = self:GetEffectiveScale();
-	local width = self:GetWidth() * scale;
-	local height = self:GetHeight() * scale;
+	local width = self:GetWidth();
+	local height = self:GetHeight();
 	local rows = floor(height / offset);
 	local cols = floor(width / offset);
 
@@ -91,7 +91,7 @@ function groupPrototype:FillWithButtons()
 			if(not button) then
 				button = self:AddButton();
 			end
-			button:SetParent(this);
+			button:SetParent(self);
 			self:PositionButton(button, row, col);
 			button:Show();
 		end
