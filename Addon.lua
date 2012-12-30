@@ -9,9 +9,9 @@ local addonName = "Lyranthe";
 Lyranthe = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "AceEvent-3.0");
 local addon = Lyranthe;
 
-addon.GROUP_TEMPLATE = "LyrantheButtonGroup";
-addon.BUTTON_TEMPLATE = "LyrantheButton";
-addon.BUTTON_SIDE_LENGTH = 38;
+addon.GROUP_TEMPLATE = "LyrantheActionButtonGroup";
+addon.BUTTON_TEMPLATE = "LyrantheActionButton";
+addon.BUTTON_SIDE_LENGTH = 36;
 
 local LibKeyBound = LibStub("LibKeyBound-1.0");
 local LibActionButton = LibStub("LibActionButton-1.0");

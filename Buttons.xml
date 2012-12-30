@@ -1,17 +1,9 @@
-<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
 
-	<Frame name="LyrantheButtonBar" toplevel="true"
-		frameStrata="HIGH" inherits="DynamicResizeFrame, SecureHandlerStateTemplate" virtual="true" hidden="true" enableMouse="true">
-		<Size>
-			<AbsDimension x="500" y="38" />
-		</Size>
-		<ResizeBounds>
-			<minResize>
-				<AbsDimension x="500" y="38" />
-			</minResize>
-		</ResizeBounds>
-	</Frame>
+	<CheckButton name="LyrantheActionButton" toplevel="true" frameStrata="HIGH"
+		inherits="SecureActionButtonTemplate, ActionButtonTemplate" virtual="true" enableMouse="true">
+
+	</CheckButton>
 </Ui>
 
 

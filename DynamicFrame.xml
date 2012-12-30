@@ -14,7 +14,6 @@
 			</minResize>
 		</ResizeBounds>
 		<TitleRegion setAllPoints="true" />
-		<!-- <Layers> <Layer level="ARTWORK"> </Layer> </Layers> -->
 		<Scripts>
 			<OnLoad>
 				self:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b);
@@ -22,7 +21,7 @@
 			</OnLoad>
 		</Scripts>
 		<Frames>
-			<Frame name="$parent_Sizer" enableMouse="false" enableKeyboard="false" setAllPoints="true">
+			<Frame name="$parent_Sizer" enableMouse="false" enableKeyboard="false" setAllPoints="true" parentKey="sizer">
 				<Frames>
 					<Button name="$parent_TopLeft" enableMouse="true">
 						<Anchors>
