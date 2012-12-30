@@ -9,6 +9,7 @@ local configKey = addonName .. "GroupConfig"
 local LibActionButton = LibStub("LibActionButton-1.0");
 local Masque = LibStub("Masque", true);
 
+local sidePad = 5;
 local spacing = 4;
 local offset = addon.BUTTON_SIDE_LENGTH + spacing;
 
@@ -67,7 +68,7 @@ function groupPrototype:PositionButton(button)
 	local column = button.column;
 	local row = button.row;
 	button:ClearAllPoints();
-	button:SetPoint("TOPLEFT", self, "TOPLEFT", (column-1)*offset, -(row-1)*offset);
+	button:SetPoint("TOPLEFT", self, "TOPLEFT", sidePad + (column-1)*offset, -sidePad -(row-1)*offset);
 end
 
 function groupPrototype:OnSizeChanged(width, height)
@@ -76,30 +77,24 @@ end
 
 local function ClearSpareRows(group, startPoint)
 	local buttonRows = group.buttons;
-	if(getn(buttonRows) >= startPoint) then
+	if(#(buttonRows) >= startPoint) then
 		for rowIndex, row in next, buttonRows, startPoint do
 			for columnIndex, button in next, row do
 				group:RemoveButton(button);
 			end
 		end
 	end
+end
 
-	-- Clean out rows below the bottom
-	--	for row = startPoint, buttonRows[row], 1 do
-	--		local buttons = buttonRows[row];
-	--		for column = 1, buttons[column], 1 do
-	--			local button = buttons[column];
-	--
-	--		end
-	--	end
-	--
-	--
-	--	while(buttons[buttonIndex]) do
-	--		local button = buttons[buttonIndex];
-	--		button:SetParent(nil);
-	--		button:Hide();
-	--		buttonIndex = buttonIndex + 1;
-	--	end
+function ClearSpareColumns(group, rowIndex, startPoint)
+   local row = group.buttons[rowIndex];
+   if row then
+      if(#(row) >= startPoint) then
+         for columnIndex, button in next, row, startPoint do
+            group:RemoveButton(button);
+         end
+      end
+   end
 end
 
 function groupPrototype:RemoveButton(button)
@@ -112,9 +107,8 @@ function groupPrototype:RemoveButton(button)
 end
 
 function groupPrototype:FillWithButtons()
-	local scale = self:GetEffectiveScale();
-	local width = self:GetWidth();
-	local height = self:GetHeight();
+	local width = self:GetWidth() - sidePad;
+	local height = self:GetHeight() - sidePad;
 	local rows = floor(height / offset);
 	local columns = floor(width / offset);
 
@@ -124,6 +118,7 @@ function groupPrototype:FillWithButtons()
 			local button = self:GetButton(row,column);
 			self:AddButton(button);
 		end
+		ClearSpareColumns(self, row, columns);
 	end
 	ClearSpareRows(self, rows)
 end
@@ -134,7 +129,8 @@ function groupPrototype:GetButton(row,column)
 	local button = _G[buttonName];
 	if not(button) then
 		button =  CreateFrame("CheckButton", buttonName, self, addon.BUTTON_TEMPLATE);
-		
+		button.action = column;
+		ActionButton_OnLoad(button);
 	end
 	button.row = row;
 	button.column = column;
