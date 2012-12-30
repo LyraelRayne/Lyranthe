@@ -223,14 +223,14 @@
 								<Anchor point="TOPLEFT" x="0" y="-2" />
 								<Anchor point="BOTTOMRIGHT" />
 							</Anchors>
-							<TexCoords left="0.5" right="1" top="0" bottom="0.5" />
+							<TexCoords left="0.5" right="1" top="0" bottom="0.49" />
 						</PushedTexture>
 						<HighlightTexture file="Interface\addons\Lyranthe\sizer.tga" alpha="0.5">
 							<Anchors>
 								<Anchor point="TOPLEFT" x="0" y="-2" />
 								<Anchor point="BOTTOMRIGHT" />
 							</Anchors>
-							<TexCoords left="0.5" right="1" top="0" bottom="0.5" />
+							<TexCoords left="0.5" right="1" top="0" bottom="0.49" />
 						</HighlightTexture>
 					</Button>
 					<Button name="$parent_Bottom" enableMouse="true">
@@ -254,14 +254,14 @@
 								<Anchor point="BOTTOMLEFT" x="0" y="2" />
 								<Anchor point="TOPRIGHT" />
 							</Anchors>
-							<TexCoords left="0.5" right="1" top="0.5" bottom="0" />
+							<TexCoords left="0.5" right="1" top="0.49" bottom="0" />
 						</PushedTexture>
 						<HighlightTexture file="Interface\addons\Lyranthe\sizer.tga" alpha="0.5">
 							<Anchors>
 								<Anchor point="BOTTOMLEFT" x="0" y="2" />
 								<Anchor point="TOPRIGHT" />
 							</Anchors>
-							<TexCoords left="0.5" right="1" top="0.5" bottom="0" />
+							<TexCoords left="0.5" right="1" top="0.49" bottom="0" />
 						</HighlightTexture>
 					</Button>
 				</Frames>
