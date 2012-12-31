@@ -14,6 +14,7 @@ local DefaultSettings = {
 				centerX = 0,
 				centerY = 0,
 				relativePoint = "CENTER",
+				anchorPoint = "CENTER",
 				width = 40,
 				height = 40,
 			},
