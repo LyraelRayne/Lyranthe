@@ -4,11 +4,11 @@
 	<Frame name="LyrantheActionButtonGroup" toplevel="true"
 		frameStrata="HIGH" inherits="DynamicResizeFrame, SecureHandlerStateTemplate" virtual="true" hidden="true" enableMouse="true">
 		<Size>
-			<AbsDimension x="40" y="40" />
+			<AbsDimension x="45" y="45" />
 		</Size>
 		<ResizeBounds>
 			<minResize>
-				<AbsDimension x="40" y="40" />
+				<AbsDimension x="45" y="45" />
 			</minResize>
 		</ResizeBounds>
 	</Frame>

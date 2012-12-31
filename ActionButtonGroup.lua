@@ -61,7 +61,7 @@ function groupPrototype:LoadConfig()
 
 	self:SetWidth(config.width);
 	self:SetHeight(config.height);
-	self:SetPoint("CENTER", nil, config.relativePoint, config.centerX, config.centerY);
+	self:SetPoint(config.anchorPoint, nil, config.relativePoint, config.centerX, config.centerY);
 end
 
 function groupPrototype:PositionButton(button)
@@ -77,7 +77,12 @@ end
 
 local function ClearSpareRows(group, startPoint)
 	local buttonRows = group.buttons;
-	if(#(buttonRows) >= startPoint) then
+	-- Handles the case where there are 0 rows gracefully.
+	if(startPoint <= 0) then
+		startPoint = 1;
+	end
+	
+	if(buttonRows and #(buttonRows) >= startPoint) then
 		for rowIndex, row in next, buttonRows, startPoint do
 			for columnIndex, button in next, row do
 				group:RemoveButton(button);
@@ -88,6 +93,10 @@ end
 
 function ClearSpareColumns(group, rowIndex, startPoint)
    local row = group.buttons[rowIndex];
+   -- Handles the case where there are 0 columns gracefully.
+   if(startPoint <= 0) then
+		startPoint = 1;
+	end
    if row then
       if(#(row) >= startPoint) then
          for columnIndex, button in next, row, startPoint do
@@ -130,7 +139,6 @@ function groupPrototype:GetButton(row,column)
 	if not(button) then
 		button =  CreateFrame("CheckButton", buttonName, self, addon.BUTTON_TEMPLATE);
 		button.action = column;
-		ActionButton_OnLoad(button);
 	end
 	button.row = row;
 	button.column = column;
@@ -172,5 +180,6 @@ function groupPrototype:CommitPositionChanges()
 	local config = self[configKey];
 	config.width = self:GetWidth();
 	config.height = self:GetHeight();
-	_, _, config.relativePoint, config.centerX, config.centerY = self:GetPoint("CENTER");
+	-- There should only ever be one point.
+	config.anchorPoint, _, config.relativePoint, config.centerX, config.centerY = self:GetPoint();
 end
