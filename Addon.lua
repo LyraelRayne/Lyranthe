@@ -32,14 +32,17 @@ end
 
 function addon:OnEnable(first)
 	self:GenerateBars();
-
+	
 --	LibKeyBound.RegisterCallback(self, "LIBKEYBOUND_ENABLED")
 --	LibKeyBound.RegisterCallback(self, "LIBKEYBOUND_DISABLED")
 --	LibKeyBound.RegisterCallback(self, "LIBKEYBOUND_MODE_COLOR_CHANGED")
 end
 
 function addon:GenerateBars()
-
+	local groups = addon.configDB.profile.groups;
+	for name, group in pairs(groups) do
+		addon:CreateGroup(name);
+	end
 end
 
 function addon:RegisterEvents()

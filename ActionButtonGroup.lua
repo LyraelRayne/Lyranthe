@@ -7,6 +7,7 @@ local profile = nil;
 local configKey = addonName .. "GroupConfig"
 
 local LibActionButton = LibStub("LibActionButton-1.0");
+local LibSecureButtonConfig = LibStub("LibSecureButtonConfig-1.0");
 local Masque = LibStub("Masque", true);
 
 local sidePad = 5;
@@ -37,12 +38,11 @@ function addon:CreateGroup(name)
 	local group = CreateFrame("Frame", name, UIParent, addon.GROUP_TEMPLATE);
 	group:AssignMasqueGroup();
 	group:ClearAllPoints();
-	group:EnableConfigMode();
 	group.buttons = {};
 	group:SetScript("OnSizeChanged", group.OnSizeChanged);
 	group:LoadConfig();
 	group:Show();
-
+	
 	return group;
 end
 
@@ -139,6 +139,7 @@ function groupPrototype:GetButton(row,column)
 	if not(button) then
 		button =  CreateFrame("CheckButton", buttonName, self, addon.BUTTON_TEMPLATE);
 		button.action = column;
+		LibSecureButtonConfig:ConfigureButton(button);
 	end
 	button.row = row;
 	button.column = column;
