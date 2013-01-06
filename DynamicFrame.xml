@@ -21,7 +21,7 @@
 			</OnLoad>
 		</Scripts>
 		<Frames>
-			<Frame name="$parent_Sizer" enableMouse="false" enableKeyboard="false" setAllPoints="true" parentKey="sizer">
+			<Frame name="$parent_Sizer" enableMouse="false" enableKeyboard="false" setAllPoints="true" parentKey="sizer" hidden="true">
 				<Frames>
 					<Button name="$parent_TopLeft" enableMouse="true">
 						<Anchors>

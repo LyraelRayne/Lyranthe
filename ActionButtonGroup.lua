@@ -42,13 +42,15 @@ function addon:CreateGroup(name)
 	group:SetScript("OnSizeChanged", group.OnSizeChanged);
 	group:LoadConfig();
 	group:Show();
-	
+
 	return group;
 end
 
 function groupPrototype:AssignMasqueGroup()
-	local groupName = self:GetName();
-	self.masqueGroup = Masque:Group(addonName, groupName);
+	if Masque then
+		local groupName = self:GetName();
+		self.masqueGroup = Masque:Group(addonName, groupName);
+	end
 end
 
 function groupPrototype:LoadConfig()
@@ -81,7 +83,7 @@ local function ClearSpareRows(group, startPoint)
 	if(startPoint <= 0) then
 		startPoint = 1;
 	end
-	
+
 	if(buttonRows and #(buttonRows) >= startPoint) then
 		for rowIndex, row in next, buttonRows, startPoint do
 			for columnIndex, button in next, row do
@@ -92,18 +94,18 @@ local function ClearSpareRows(group, startPoint)
 end
 
 function ClearSpareColumns(group, rowIndex, startPoint)
-   local row = group.buttons[rowIndex];
-   -- Handles the case where there are 0 columns gracefully.
-   if(startPoint <= 0) then
+	local row = group.buttons[rowIndex];
+	-- Handles the case where there are 0 columns gracefully.
+	if(startPoint <= 0) then
 		startPoint = 1;
 	end
-   if row then
-      if(#(row) >= startPoint) then
-         for columnIndex, button in next, row, startPoint do
-            group:RemoveButton(button);
-         end
-      end
-   end
+	if row then
+		if(#(row) >= startPoint) then
+			for columnIndex, button in next, row, startPoint do
+				group:RemoveButton(button);
+			end
+		end
+	end
 end
 
 function groupPrototype:RemoveButton(button)
@@ -112,7 +114,10 @@ function groupPrototype:RemoveButton(button)
 	self.buttons[row][column] = nil;
 	button:SetParent(nil);
 	button:Hide();
-	self.masqueGroup:RemoveButton(button, true);
+	if self.masqueGroup then
+		self.masqueGroup:RemoveButton(button, true);
+	end
+	button:Deactivate()
 end
 
 function groupPrototype:FillWithButtons()
@@ -154,7 +159,10 @@ function groupPrototype:AddButton(button)
 	if(not buttons[row]) then buttons[row] = {} end
 	buttons[row][column] = button;
 	button:SetParent(self);
-	self.masqueGroup:AddButton(button);
+	if self.masqueGroup then
+		self.masqueGroup:AddButton(button);
+	end
+	button:Activate()
 	self:PositionButton(button);
 	button:Show();
 end
